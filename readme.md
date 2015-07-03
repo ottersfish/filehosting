@@ -12,12 +12,12 @@ Now is written using Laravel 4 Framework.
 3. Extract it to your project and replace the files.
 4. Configure laravel database config accordingly. Since laravel provides database migration you can choose between databases which is supported by laravel.
 5. Do the migration using 'php artisan' by running this command  
-  ```sh
+  ```
   php artisan migrate  
   php artisan db:seed  
   ```
 6. To start the server you can use this command  
-  ```sh
+  ```
   php artisan serve
   ```
   or using your own php server (e.g. xampp)
