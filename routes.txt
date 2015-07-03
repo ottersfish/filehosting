@@ -1,0 +1,43 @@
+
+Warning: PHP Startup: Unable to load dynamic library 'C:\xampp\php\ext\php_oci8.dll' - The specified module could not be found.
+ in Unknown on line 0
++--------+----------------------------------------------------------------+---------------+-------------------------------+----------------+---------------+
+| Domain | URI                                                            | Name          | Action                        | Before Filters | After Filters |
++--------+----------------------------------------------------------------+---------------+-------------------------------+----------------+---------------+
+|        | GET|HEAD /                                                     |               | Closure                       |                |               |
+|        | GET|HEAD admin/files/{id}                                      |               | AdminController@files         | auth           |               |
+|        | GET|HEAD admin                                                 | admin.index   | AdminController@index         | auth           |               |
+|        | GET|HEAD admin/create                                          | admin.create  | AdminController@create        | auth           |               |
+|        | POST admin                                                     | admin.store   | AdminController@store         | auth           |               |
+|        | GET|HEAD admin/{admin}                                         | admin.show    | AdminController@show          | auth           |               |
+|        | GET|HEAD admin/{admin}/edit                                    | admin.edit    | AdminController@edit          | auth           |               |
+|        | PUT admin/{admin}                                              | admin.update  | AdminController@update        | auth           |               |
+|        | PATCH admin/{admin}                                            |               | AdminController@update        | auth           |               |
+|        | DELETE admin/{admin}                                           | admin.destroy | AdminController@destroy       | auth           |               |
+|        | GET|HEAD home/files                                            |               | HomeController@getFiles       | auth           |               |
+|        | GET|HEAD home/edit/{key}/{method}                              |               | HomeController@edit           | auth           |               |
+|        | PUT home/edit                                                  |               | HomeController                | auth           |               |
+|        | DELETE home/edit                                               |               | HomeController                | auth           |               |
+|        | GET|HEAD notfound                                              |               | Closure                       |                |               |
+|        | GET|HEAD home/do_download/{key}                                |               | HomeController@doDownload     |                |               |
+|        | GET|HEAD home/success/{key}                                    |               | HomeController@getSuccess     |                |               |
+|        | GET|HEAD home/index/{one?}/{two?}/{three?}/{four?}/{five?}     |               | HomeController@getIndex       |                |               |
+|        | GET|HEAD home                                                  |               | HomeController@getIndex       |                |               |
+|        | POST home/index/{one?}/{two?}/{three?}/{four?}/{five?}         |               | HomeController@postIndex      |                |               |
+|        | POST home                                                      |               | HomeController@postIndex      |                |               |
+|        | GET|HEAD home/files/{one?}/{two?}/{three?}/{four?}/{five?}     |               | HomeController@getFiles       |                |               |
+|        | GET|HEAD home/download/{one?}/{two?}/{three?}/{four?}/{five?}  |               | HomeController@getDownload    |                |               |
+|        | GET|HEAD home/success/{one?}/{two?}/{three?}/{four?}/{five?}   |               | HomeController@getSuccess     |                |               |
+|        | PUT home/edit/{one?}/{two?}/{three?}/{four?}/{five?}           |               | HomeController@putEdit        |                |               |
+|        | DELETE home/edit/{one?}/{two?}/{three?}/{four?}/{five?}        |               | HomeController@deleteEdit     |                |               |
+|        | GET|HEAD|POST|PUT|PATCH|DELETE home/{_missing}                 |               | HomeController@missingMethod  |                |               |
+|        | GET|HEAD login/index/{one?}/{two?}/{three?}/{four?}/{five?}    |               | LoginController@getIndex      |                |               |
+|        | GET|HEAD login                                                 |               | LoginController@getIndex      |                |               |
+|        | POST login/index/{one?}/{two?}/{three?}/{four?}/{five?}        |               | LoginController@postIndex     |                |               |
+|        | POST login                                                     |               | LoginController@postIndex     |                |               |
+|        | GET|HEAD login/logout/{one?}/{two?}/{three?}/{four?}/{five?}   |               | LoginController@getLogout     |                |               |
+|        | GET|HEAD login/register/{one?}/{two?}/{three?}/{four?}/{five?} |               | LoginController@getRegister   |                |               |
+|        | POST login/register/{one?}/{two?}/{three?}/{four?}/{five?}     |               | LoginController@postRegister  |                |               |
+|        | GET|HEAD|POST|PUT|PATCH|DELETE login/{_missing}                |               | LoginController@missingMethod |                |               |
+|        | POST login/{param}                                             |               | LoginController@test          |                |               |
++--------+----------------------------------------------------------------+---------------+-------------------------------+----------------+---------------+
