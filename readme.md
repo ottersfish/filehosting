@@ -1,23 +1,23 @@
 #File Host - A web based file hosting.
 
-A small website project previously written using CodeIgniter Framework for school project.
+A small website project previously written using CodeIgniter Framework for school project.  
 Now is written using Laravel 4 Framework.
 
 ## Installation
-1. Install laravel 4 using composer
-  ```shell
+1. Install laravel 4 using composer  
+  ```
   composer create-project laravel/laravel [project-name] 4.2 --prefer-dist
   ```
 2. Download the project to your local machine.
 3. Extract it to your project and replace the files.
 4. Configure laravel database config accordingly. Since laravel provides database migration you can choose between databases which is supported by laravel.
-5. Do the migration using 'php artisan' by running this command
-  ```shell
-  php artisan migrate
-  php artisan db:seed
+5. Do the migration using 'php artisan' by running this command  
+  ```sh
+  php artisan migrate  
+  php artisan db:seed  
   ```
-6. To start the server you can use this command
-  ```shell
+6. To start the server you can use this command  
+  ```sh
   php artisan serve
   ```
   or using your own php server (e.g. xampp)
