@@ -1,23 +1,20 @@
 <?php
 
 class LoginController extends BaseController {
+
+	protected $userDao;
+	public function __construct(UserDao $userDao){
+		$this->userDao = $userDao;
+	}
+
 	public function getIndex(){
 		return View::make('login.index');
 	}
 
 	public function postIndex(){
-		$credentials=Input::only('username','password');
+		$credentials = Input::only('username','password');
+		$validation_result = $this->userDao->validateLogin($credentials);
 
-		$messages = array(
-			'alphanum' => 'Only characters and number are allowed for :attribute.',
-		);
-
-		$rules=array(
-			'username' => 'required|alphanum',
-			'password' => 'required'
-		);
-
-		$validation_result=Validator::make($credentials,$rules,$messages);
 		if($validation_result->passes()){
 			if(Auth::attempt($credentials)){
 				return Redirect::intended('/');
@@ -47,31 +44,12 @@ class LoginController extends BaseController {
 	}
 
 	public function postRegister(){
-		$input=Input::all();
-		$messages=array(
-			'alphanum' => 'Only characters and number are allowed for :attribute.'
-		);
-		$rules=array(
-			'email_address' => 'required|email',
-			'username' => 'required|alphanum',
-			'password' => 'required',
-			'con_password' => 'required|same:password',
-			'name' => 'required'
-		);
-
-		$validation_result=Validator::make($input,$rules,$messages);
+		$regData = Input::all();
+		$validation_result = $this->userDao->validateRegister($regData);
 		if($validation_result->passes()){
-			$users = DB::table('users')
-						->where('username', $input['username'])
-						->pluck('id');
-			$emails = DB::table('users')
-						->where('email', $input['email_address'])
-						->pluck('id');
-			if(is_null($users) && is_null($emails)){
-				$create = User::create($input);
-				$create->email=$input['email_address'];
-				$create->password=Hash::make($create->password);
-				if($create->save()){
+			$errors = $this->userDao->checkAvailbility($regData['username'], $regData['email_address']);
+			if(empty($errors)){
+				if($this->userDao->saveUser($regData)){
 					return Redirect::intended('login')
 						->with('message','test');
 				}
@@ -82,15 +60,11 @@ class LoginController extends BaseController {
 
 			}
 			else{
-				$errors = array();
-				if(!is_null($users))array_push($errors, 'Username has already taken');
-				if(!is_null($emails))array_push($errors, 'Email has already been registered');
 				return Redirect::back()
 					->withInput()
 					->withErrors($errors);
 			}
 		}else{
-			//var_dump($validation_result);return;
 			return Redirect::back()
 				->withInput()
 				->withErrors($validation_result);

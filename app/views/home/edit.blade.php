@@ -23,8 +23,8 @@
 				<div style="padding-top:30px" class="panel-body">
 					{{Form::model($file, array('method' => $method, 'url'=>'home/edit/'.$file->key))}}
 						<div class="row form-group">
-							<label for="filename" class="col-md-3 control-label">File Name:</label>
-							{{ Form::text('filename', null, ['class' => 'col-md-8']) }}
+							<label for="fileName" class="col-md-3 control-label">File Name:</label>
+							{{ Form::text('fileName', null, ['class' => 'col-md-8']) }}
 						</div>
 						<div class="row form-group">
 							<label for="extension" class="col-md-3 control-label">Extension:</label>
@@ -43,7 +43,7 @@
 			{{ Form::model($file, array('method' => $method, 'url' => 'home/edit/'.$file->key)) }}
 				<div class="row lead">
 					<div class="col-md-12 col-xs-12">
-						Are you sure want to delete file <strong>{{ $file->filename.'.'.$file->extension }}({{ $file->filesize }})?</strong>.
+						Are you sure want to delete file <strong>{{ $file->fileName.'.'.$file->extension }}({{ $file->fileSize }})?</strong>.
 					</div>
 				</div>
 				{{ Form::submit("Delete", array("class"=>"btn btn-danger")) }}
