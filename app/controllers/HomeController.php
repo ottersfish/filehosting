@@ -1,5 +1,6 @@
 <?php
 
+use Carbon\Carbon;
 class HomeController extends BaseController {
 
 	/*
@@ -36,8 +37,9 @@ class HomeController extends BaseController {
 			mkdir($main_dir.$item->id_user);
 		}
 		$target_dir = $main_dir.$item->id_user.'/'.$item->key;
-		mkdir($target_dir);
-		$fileName = $file['file']->getClientOriginalName();
+		if(!file_exists($target_dir))mkdir($target_dir);
+		$fileName = Carbon::now()->format('Y_d_m_h_i_s_');
+		$fileName .= $file['file']->getClientOriginalName();
 		$file['file']->move($target_dir, $fileName);
 	}
 
@@ -46,7 +48,7 @@ class HomeController extends BaseController {
 		$validation_result = $this->fileDao->validate($file);
 		if(!$validation_result->fails()){
 			$item = new UserFile;
-			if($this->fileDao->saveFile($item)){
+			if($this->fileDao->saveFile($file, $item)){
 				$this->moveFile($file, $item);
 				return Redirect::to('home/success/'.$item->key);
 			}
@@ -71,7 +73,8 @@ class HomeController extends BaseController {
 	}
 
 	public function doDownload($key){
-		return Response::download($this->fileDao->getFilePath($key));
+		$file = $this->fileDao->getFilePath($key);
+		return Response::download($file->path, $file->fileName);
 	}
 
 	public function getSuccess($key){
@@ -82,16 +85,22 @@ class HomeController extends BaseController {
 		if($this->fileDao->fileExists($key)){
 			if(Auth::user()->canEdit($key)){
 				$fileInfo = $this->fileDao->getFileInfo($key);
-				$fileInfo->fileName = basename($fileInfo->fileName, '.'.$fileInfo->extension);
 				if($method == 'delete'){
 					return View::make('home.edit')
 						->with('file', $fileInfo)
 						->with('method', 'delete');
 				}
 				else if($method == 'edit'){
+					$fileInfo->fileName = basename($fileInfo->fileName, '.'.$fileInfo->extension);
 					return View::make('home.edit')
 						->with('file', $fileInfo)
 						->with('method', 'put');
+				}
+				else if($method == 'revision'){
+					$revHistory = $this->fileDao->getRevisionHistory($key);
+					return View::make('home.revisions')
+							->with('file', $fileInfo)
+							->with('revHistory', $revHistory);
 				}
 				else{
 					return Response::view('notfound');
@@ -120,6 +129,28 @@ class HomeController extends BaseController {
 			$prefix='home/';
 		}
 		return Redirect::to($prefix.'files')
-				->with('message', $fileName.' successfully deleted.');
+				->with('message', $key.' successfully deleted.');
+	}
+
+	public function doRevision($key){
+		$file = array('file' => Input::file('userFile'));
+		$validation_result = $this->fileDao->validate($file);
+		if(!$validation_result->fails()){
+			$item = new UserFile;
+			$item->key = $key;
+			if($this->fileDao->reviseFile($file, $item)){
+				$this->moveFile($file, $item);
+				return Redirect::to('home/edit/'.$item->key.'/revision');
+			}
+			else{
+				return Redirect::to('home/edit/'.$item->key.'/revision')
+					->with('errors','Failed to upload the file, please try again!');
+			}
+		}
+		else{
+			return Redirect::back()
+				->withInput()
+				->withErrors($validation_result);
+		}
 	}
 }

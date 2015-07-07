@@ -112,28 +112,10 @@ class AdminController extends BaseController {
 	 * @param  int  $id
 	 * @return Response
 	 */
-	private function deleteFilesAndFolder($id){
-		$dir = public_path('files/'.$id);
-		if(file_exists($dir)){
-			$it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
-			$files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
-
-			foreach($files as $file) {
-			    if ($file->isDir()){
-					rmdir($file->getRealPath());
-				}
-				else{
-					unlink($file->getRealPath());
-				}
-			}
-			rmdir($dir);
-		}
-
-	}
 
 	public function destroy($id)
 	{
-		$this->deleteFilesAndFolder($id);
+		$this->fileDao->deleteFilesAndFolder($id);
 		$this->fileDao->deleteFilesByOwnership($id);
 		$this->userDao->deleteUserById($id);
 		return Redirect::to('admin/users')
@@ -143,9 +125,14 @@ class AdminController extends BaseController {
 	public function delete($id)
 	{
 		if($id!=1){
-			return View::make('admin.deleteUser')
-				->with('user', $this->userDao->getUserById($id))
-				->with('files', $this->fileDao->getFilesByOwnership($id));
+			if($this->userDao->userExists($id)){
+				return View::make('admin.deleteUser')
+					->with('user', $this->userDao->getUserById($id))
+					->with('files', $this->fileDao->getFilesByOwnership($id));
+			}
+			else{
+				return Response::view('notfound');
+			}
 		}
 		else{
 			return Response::view('unauthorized');

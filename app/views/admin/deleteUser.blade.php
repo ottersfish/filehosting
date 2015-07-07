@@ -32,6 +32,7 @@
 										<tr>
 											<td>#</td>
 											<td>File Name</td>
+											<td>Extension</td>
 											<td>Link</td>
 											<td>File Size</td>
 										</tr>
@@ -46,9 +47,9 @@
 										<?php
 											$targetdir=public_path('files/'.$file->id_user.'/'.$file->key);
 											$lists=scandir($targetdir,1);
-											$filename=$lists[0];
-											$filesize=filesize($targetdir.'/'.$filename);
-											$bytes=$filesize;
+											$fileName=$lists[0];
+											$fileSize=filesize($targetdir.'/'.$fileName);
+											$bytes=$fileSize;
 											$precision=2;
 											$units = array('B', 'KB', 'MB', 'GB', 'TB'); 
 											$bytes = max($bytes, 0); 
@@ -59,16 +60,12 @@
 										?>
 											<tr>
 												<td>{{ $rownum++ }}</td>
-												<td>{{ $filename }}</td>
+												<td>{{ $file->filename }}</td>
+												<td>{{ $file->extension }}</td>
 												<td><a href="{{ url('home/download/'.$file->key) }}" >{{ url('home/download/'.$file->key) }}</a></td>
 												<td>
 													{{ $filesize }}
 												</td>
-												@if(!$usernameFlag)
-												<td>
-													{{ $file->username }}
-												</td>
-												@endif
 											</tr>
 										@endforeach
 									</tbody>

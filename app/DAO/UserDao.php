@@ -67,5 +67,9 @@ class UserDao extends User
 	public function deleteUserById($id){
 		$this->where('id', '=', $id)->delete();
 	}
+
+	public function userExists($id){
+		return $this->find($id);
+	}
 }
 ?>

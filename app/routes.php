@@ -21,6 +21,7 @@ Route::group(array('before' => 'auth'),function(){
 	Route::resource('admin', 'AdminController');
 	Route::get('home/files', 'HomeController@getFiles');
 	Route::get('home/edit/{key}/{method}', 'HomeController@edit');
+	Route::post('home/edit/{key}/revision', 'HomeController@doRevision');
 	Route::put('home/edit/', 'HomeController');
 	Route::delete('home/edit', 'HomeController');
 });

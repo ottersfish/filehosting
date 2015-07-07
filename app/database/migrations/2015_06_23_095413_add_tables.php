@@ -25,6 +25,8 @@ class AddTables extends Migration {
 
 		Schema::create('files', function($table){
 			$table->increments('id');
+			$table->string('filename');
+			$table->string('extension');
 			$table->string('path');
 			$table->string('key');
 			$table->integer('id_user')->references('id')->on('users');

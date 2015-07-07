@@ -13,7 +13,7 @@
 
 	<div class="row">
 		@unless($method == 'delete')
-		<div id="signupbox" class="mainbox col-md-6 col-sm-8">
+		<div id="" class="mainbox col-md-6 col-sm-8">
 			<div class="panel panel-info" >
 				<div class="panel-heading">
 					<p class="panel-title">
@@ -43,7 +43,7 @@
 			{{ Form::model($file, array('method' => $method, 'url' => 'home/edit/'.$file->key)) }}
 				<div class="row lead">
 					<div class="col-md-12 col-xs-12">
-						Are you sure want to delete file <strong>{{ $file->fileName.'.'.$file->extension }}({{ $file->fileSize }})?</strong>.
+						Are you sure want to delete file <strong>{{ $file->fileName }}({{ $file->fileSize }})?</strong>.
 					</div>
 				</div>
 				{{ Form::submit("Delete", array("class"=>"btn btn-danger")) }}

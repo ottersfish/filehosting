@@ -24,10 +24,12 @@
 								<tr>
 									<td>#</td>
 									<td>File Name</td>
+									<td>Extension</td>
 									<td>Link</td>
 									<td>File Size</td>
 									@if(!isset($files->username))<td>Owner</td>@endif
 									<td colspan="2">Action</td>
+									<td>Revisions</td>
 								</tr>
 							</thead>
 							<tbody>
@@ -38,6 +40,7 @@
 							?>
 								@foreach($files as $file)
 								<?php
+									// var_dump($file);return;
 									$targetdir=public_path('files/'.$file->id_user.'/'.$file->key);
 									$lists=scandir($targetdir,1);
 									$filename=$lists[0];
@@ -53,7 +56,8 @@
 								?>
 									<tr>
 										<td>{{ $rownum++ }}</td>
-										<td>{{ $filename }}</td>
+										<td>{{ $file->filename }}</td>
+										<td>{{ '.'.$file->extension }}</td>
 										<td><a href="{{ url('home/download/'.$file->key) }}" >{{ url('home/download/'.$file->key) }}</a></td>
 										<td>
 											{{ $filesize }}
@@ -71,6 +75,11 @@
 										<td>
 											<a href="{{ url('home/edit/'.$file->key.'/edit') }}">
 												{{ Form::button('Edit', ['class' => 'btn btn-success btn-sm'])}}
+											</a>
+										</td>
+										<td>
+											<a href="{{ url('home/edit/'.$file->key.'/revision') }}">
+												{{ Form::button('Show', ['class' => 'btn btn-default btn-sm']) }}
 											</a>
 										</td>
 									</tr>

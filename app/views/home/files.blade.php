@@ -24,11 +24,11 @@
 								<tr>
 									<td>#</td>
 									<td>File Name</td>
+									<td>Type</td>
 									<td>Link</td>
 									<td>File Size</td>
 									<td colspan="2">Action</td>
-									<!-- <td>a</td> -->
-									<!-- <td>b</td> -->
+									<td>Revisions</td>
 								</tr>
 							</thead>
 							<tbody>
@@ -52,7 +52,8 @@
 								?>
 									<tr>
 									<td>{{ $rownum++ }}</td>
-									<td>{{ $filename }}</td>
+									<td>{{ $file->filename }}</td>
+									<td>{{ '.'.$file->extension }}</td>
 									<td><a href="{{ url('home/download/'.$file->key) }}" >{{ url('home/download/'.$file->key) }}</a></td>
 									<td>
 										{{ $filesize }}
@@ -65,6 +66,11 @@
 									<td>
 										<a href="{{ url('home/edit/'.$file->key.'/edit') }}">
 											{{ Form::button('Edit', ['class' => 'btn btn-success btn-sm'])}}
+										</a>
+									</td>
+									<td>
+										<a href="{{ url('home/edit/'.$file->key.'/revision') }}">
+											{{ Form::button('Show', ['class' => 'btn btn-default btn-sm']) }}
 										</a>
 									</td>
 									</tr>
