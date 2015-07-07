@@ -36,3 +36,7 @@ Now is written using Laravel 4 Framework.
 3. File-folder system.
 
 If you found any bugs please feel free to contact me at fendy.fendy95@gmail.com
+
+## Changelog
+v0.2 Added file revision feature (keeping the same link)
+v0.1 first-release
