@@ -15,7 +15,6 @@
 			<div class="panel panel-default">
 			<!-- Default panel contents -->
 				<div class="panel-heading">List of @if(isset($files->username)){{$files->username}}@else {{'All'}}@endif Files</div>
-
 				<!-- Table -->
 				<!-- <div class="panel-body"> -->
 					<div class="table-responsive">
@@ -40,19 +39,9 @@
 							?>
 								@foreach($files as $file)
 								<?php
-									// var_dump($file);return;
-									$targetdir=public_path('files/'.$file->id_user.'/'.$file->key);
-									$lists=scandir($targetdir,1);
-									$filename=$lists[0];
-									$filesize=filesize($targetdir.'/'.$filename);
-									$bytes=$filesize;
-									$precision=2;
-									$units = array('B', 'KB', 'MB', 'GB', 'TB'); 
-									$bytes = max($bytes, 0); 
-									$pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
-									$pow = min($pow, count($units) - 1);
-									$bytes /= (1 << (10 * $pow)); 
-									$filesize=round($bytes, $precision) . ' ' . $units[$pow];
+									$targetdir=storage_path('files/'.$file->id_user.'/'.$file->key);
+									$filename = $file->origFilename.'.'.$file->extension;
+									$filesize = Helpers::formatFileSize(filesize($targetdir.'/'.$filename));
 								?>
 									<tr>
 										<td>{{ $rownum++ }}</td>
@@ -89,6 +78,7 @@
 					</div>
 				<!-- </div> -->
 			</div>
+			@if(method_exists($files, 'links')){{ $files->links() }}@endif
 		</div>
 	</div>
 @stop

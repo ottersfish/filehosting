@@ -11,6 +11,7 @@
 			"app/commands",
 			"app/controllers",
 			"app/DAO",
+			"app/Helpers",
 			"app/models",
 			"app/database/migrations",
 			"app/database/seeds",

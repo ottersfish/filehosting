@@ -9,7 +9,7 @@ class UsersSeeder extends Seeder {
 			'is_admin'=>true)
 		);
 		User::create(array(
-			'username' => '',
+			'username' => 'guest',
 			'password' => '',
 			'name' => 'guest',
 			'email' => 'guest@example.com'

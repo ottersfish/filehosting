@@ -45,23 +45,14 @@
 									?>
 										@foreach($files as $file)
 										<?php
-											$targetdir=public_path('files/'.$file->id_user.'/'.$file->key);
-											$lists=scandir($targetdir,1);
-											$fileName=$lists[0];
-											$fileSize=filesize($targetdir.'/'.$fileName);
-											$bytes=$fileSize;
-											$precision=2;
-											$units = array('B', 'KB', 'MB', 'GB', 'TB'); 
-											$bytes = max($bytes, 0); 
-											$pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
-											$pow = min($pow, count($units) - 1);
-											$bytes /= (1 << (10 * $pow)); 
-											$filesize=round($bytes, $precision) . ' ' . $units[$pow];
+											$targetdir=storage_path('files/'.$file->id_user.'/'.$file->key);
+											$filename = $file->origFilename.'.'.$file->extension;
+											$filesize = Helpers::formatFileSize(filesize($targetdir.'/'.$filename));
 										?>
 											<tr>
 												<td>{{ $rownum++ }}</td>
 												<td>{{ $file->filename }}</td>
-												<td>{{ $file->extension }}</td>
+												<td>{{ '.'.$file->extension }}</td>
 												<td><a href="{{ url('home/download/'.$file->key) }}" >{{ url('home/download/'.$file->key) }}</a></td>
 												<td>
 													{{ $filesize }}

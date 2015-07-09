@@ -23,13 +23,21 @@ class AddTables extends Migration {
 			$table->timestamps();
 		});
 
-		Schema::create('files', function($table){
+		Schema::create('keys', function($table){
 			$table->increments('id');
-			$table->string('filename');
-			$table->string('extension');
 			$table->string('path');
 			$table->string('key');
 			$table->integer('id_user')->references('id')->on('users');
+			$table->timestamps();
+		});
+
+		Schema::create('files', function($table){
+			$table->increments('id');
+			$table->string('key')->references('key')->on('files');
+			$table->string('origFilename');
+			$table->string('filename');
+			$table->string('extension');
+			$table->boolean('is_active');
 			$table->timestamps();
 		});
 	}
@@ -42,8 +50,9 @@ class AddTables extends Migration {
 	public function down()
 	{
 		//
-		Schema::drop('files');
 		Schema::drop('users');
+		Schema::drop('keys');
+		Schema::drop('files');
 	}
 
 }

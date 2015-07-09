@@ -42,14 +42,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password', 'remember_token');
 	protected $fillable = array('email','username','password','name');
-	protected $guarded = array('is_admin','password');
+	protected $guarded = array('id','is_admin');
 	
 	public function file(){
 		return $this->hasMany('File');
 	}
 
 	public function owns($key){
-		$file = UserFile::where('key',$key)->get()->first();
+		$file = Key::where('key', $key)->get()->first();
 		return $file->id_user == Auth::user()->id;
 	}
 

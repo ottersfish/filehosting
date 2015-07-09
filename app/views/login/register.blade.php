@@ -16,9 +16,9 @@
 			<div style="padding-top:30px" class="panel-body">
 				{{ Form::open(array('id' => 'register_form', 'class' => 'form-horizontal')) }}
 					<div class="row form-group">
-						<label for="email_address" class="col-md-3 control-label">Your Email:</label>
+						<label for="email" class="col-md-3 control-label">Your Email:</label>
 						<div class="col-md-4">
-							{{ Form::text('email_address') }}
+							{{ Form::text('email') }}
 						</div>
 					</div>
 					<div class="row form-group">

@@ -8,9 +8,10 @@ class AdminController extends BaseController {
 	 * @return Response
 	 */
 
-	protected $fileDao, $userDao;
-	public function __construct(FileDao $fileDao, UserDao $userDao){
-		$this->fileDao = $fileDao;
+	protected $myFileDao, $keyDao, $userDao;
+	public function __construct(myFileDao $myFileDao, KeyDao $keyDao, UserDao $userDao){
+		$this->myFileDao = $myFileDao;
+		$this->keyDao = $keyDao;
 		$this->userDao = $userDao;
 	}
 
@@ -58,8 +59,9 @@ class AdminController extends BaseController {
 		//
 		if(Auth::user()->is_admin){
 			if($id=='files'){
+				$files = $this->keyDao->getFilesAdmin(true, 5);
 				return View::make('admin.files')
-					->with('files', $this->fileDao->getFilesAdmin());
+						->with('files', $files);
 			}
 			else if($id=='users'){
 				return View::make('admin.users')
@@ -75,7 +77,7 @@ class AdminController extends BaseController {
 	}
 
 	public function files($id){
-		$files = $this->fileDao->getFilesByOwnership($id);
+		$files = $this->keyDao->getFiles($id);
 		$id_user = $this->userDao->getUserById($id);
 		$files->username = $id_user->username;
 		return View::make('admin.files')
@@ -115,8 +117,9 @@ class AdminController extends BaseController {
 
 	public function destroy($id)
 	{
-		$this->fileDao->deleteFilesAndFolder($id);
-		$this->fileDao->deleteFilesByOwnership($id);
+		$this->myFileDao->deleteFilesByOwnership($id);
+		$this->keyDao->deleteFilesAndFolder($id);
+		$this->keyDao->deleteFilesByOwnership($id);
 		$this->userDao->deleteUserById($id);
 		return Redirect::to('admin/users')
 				->with('message','User and it\'s files succesfully deleted');
@@ -128,7 +131,7 @@ class AdminController extends BaseController {
 			if($this->userDao->userExists($id)){
 				return View::make('admin.deleteUser')
 					->with('user', $this->userDao->getUserById($id))
-					->with('files', $this->fileDao->getFilesByOwnership($id));
+					->with('files', $this->keyDao->getFiles($id));
 			}
 			else{
 				return Response::view('notfound');

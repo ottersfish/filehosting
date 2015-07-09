@@ -10,7 +10,7 @@ class UserDao extends User
 		);
 
 		$rules=array(
-			'email_address' => 'required|email',
+			'email' => 'required|email',
 			'username' => 'required|alphanum',
 			'password' => 'required',
 			'con_password' => 'required|same:password',
@@ -30,10 +30,8 @@ class UserDao extends User
 	}
 
 	public function saveUser($regData){
-		$user = $this->create($regData);
-		$user->email = $regData['email_address'];
-		$user->password = Hash::make($user->password);
-		return $user->save();
+		$regData['password'] = Hash::make($regData['password']);
+		return $this->create($regData);
 	}
 
 	public function validateLogin($credentials){

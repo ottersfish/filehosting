@@ -37,18 +37,9 @@
 							?>
 								@foreach($files as $file)
 								<?php
-									$targetdir=public_path('files/'.Auth::user()->id.'/'.$file->key);
-									$lists=scandir($targetdir,1);
-									$filename=$lists[0];
-									$filesize=filesize($targetdir.'/'.$filename);
-									$bytes=$filesize;
-									$precision=2;
-									$units = array('B', 'KB', 'MB', 'GB', 'TB'); 
-									$bytes = max($bytes, 0); 
-									$pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
-									$pow = min($pow, count($units) - 1);
-									$bytes /= (1 << (10 * $pow)); 
-									$filesize=round($bytes, $precision) . ' ' . $units[$pow];
+									$targetdir = storage_path('files/'.Auth::user()->id.'/'.$file->key);
+									$filename = $file->origFilename.'.'.$file->extension;
+									$filesize = Helpers::formatFileSize(filesize($targetdir.'/'.$filename))
 								?>
 									<tr>
 									<td>{{ $rownum++ }}</td>

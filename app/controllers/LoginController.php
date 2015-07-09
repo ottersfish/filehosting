@@ -47,7 +47,7 @@ class LoginController extends BaseController {
 		$regData = Input::all();
 		$validation_result = $this->userDao->validateRegister($regData);
 		if($validation_result->passes()){
-			$errors = $this->userDao->checkAvailbility($regData['username'], $regData['email_address']);
+			$errors = $this->userDao->checkAvailbility($regData['username'], $regData['email']);
 			if(empty($errors)){
 				if($this->userDao->saveUser($regData)){
 					return Redirect::intended('login')
