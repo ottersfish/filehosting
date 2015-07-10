@@ -4,6 +4,8 @@
 */
 class UserDao extends User
 {
+	protected $logDao;
+
 	public function validateRegister($regData){
 		$messages=array(
 			'alphanum' => 'Only characters and number are allowed for :attribute.'
@@ -30,6 +32,7 @@ class UserDao extends User
 	}
 
 	public function saveUser($regData){
+		LogDao::logCreate($this->table, 'email, username, password, name', $this->email.', '.$this->username);
 		$regData['password'] = Hash::make($regData['password']);
 		return $this->create($regData);
 	}
@@ -63,6 +66,8 @@ class UserDao extends User
 	}
 
 	public function deleteUserById($id){
+		$rowDeleted = $this->where('id', $id)->get()->first();
+		LogDao::logDelete($this->table, $rowDeleted->email.', '.$rowDeleted->username);
 		$this->where('id', '=', $id)->delete();
 	}
 

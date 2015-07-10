@@ -61,11 +61,15 @@ class AdminController extends BaseController {
 			if($id=='files'){
 				$files = $this->keyDao->getFilesAdmin(true, 5);
 				return View::make('admin.files')
-						->with('files', $files);
+					->with('files', $files);
 			}
 			else if($id=='users'){
 				return View::make('admin.users')
 					->with('users', $this->userDao->getUsers());	
+			}
+			else if($id=='logs'){
+				return View::make('admin.logs')
+					->with('logs', LogDao::getLogs());
 			}
 			else{
 				return Response::view('notfound');

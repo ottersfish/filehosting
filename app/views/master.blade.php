@@ -40,8 +40,11 @@
 	 						@if(Auth::check())
 	 							<?php if(Auth::user()->is_admin)$prefix='admin/';else $prefix='home/';?>
 								<li><a href="{{ url('/') }}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-								@if(Auth::user()->is_admin)<li><a href="{{ url('admin/users') }}"><span class="glyphicon glyphicon-user"></span> Users</a></li>@endif
 								<li><a href="{{ url($prefix.'files') }}"><span class="glyphicon glyphicon-file"></span> Files</a></li>
+								@if(Auth::user()->is_admin)
+									<li><a href="{{ url('admin/users') }}"><span class="glyphicon glyphicon-user"></span> Users</a></li>
+									<li><a href="{{ url('admin/logs') }}"><span class="glyphicon glyphicon-list"></span> Logs</a></li>
+								@endif
 							@else
 								<li><a href="{{url()}}"><span class="glyphicon glyphicon-arrow-up"></span> Upload</a></li>
 							@endif

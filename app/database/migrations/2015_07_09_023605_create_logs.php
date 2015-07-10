@@ -16,11 +16,11 @@ class CreateLogs extends Migration {
 		Schema::create('logs', function($table){
 			$table->increments('id');
 			$table->string('table_affected');
+			$table->string('column_affected');
 			$table->string('action');
 			$table->string('old_value')->nullable();
 			$table->string('new_value')->nullable();
 			$table->string('user');
-			$table->boolean('is_active');
 			$table->timestamps();
 		});
 	}

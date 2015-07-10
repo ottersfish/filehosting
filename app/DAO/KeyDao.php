@@ -42,6 +42,7 @@ class KeyDao extends Key{
 		else{
 			$item->id_user=2;
 		}
+		LogDao::logCreate($this->table, 'path, key, id_user', $item->key);
 		return $item->save();
 	}
 
@@ -58,6 +59,7 @@ class KeyDao extends Key{
 		$file = $this->where('key', $key)->get()->first();
 		$targetDir = $file->id_user.'/'.$key;
 		$this->deleteFilesAndFolder($targetDir);
+		LogDao::logDelete($this->table, $key);
 		$file->delete();
 	}
 
@@ -110,7 +112,19 @@ class KeyDao extends Key{
 	}
 
 	public function deleteFilesByOwnership($id){
-		$this->where('id_user','=',$id)->delete();
+		$query = $this->where('id_user','=',$id);
+		$rows = $query->get();
+		$first = 1;
+		$old_values = '';
+		foreach($rows as $row){
+			if(!$first){
+				$old_values .= ', ';
+			}
+			$old_values .= $row->key;
+			$first = 0;
+		}
+		LogDao::logDelete($this->table, $old_values);
+		$query->delete();
 	}
 
 	public function getByKey($key){

@@ -10,6 +10,7 @@ class myFileDao extends myFile{
 		$timestamp = Carbon::now()->format('Y_m_d_h_i_s_');
 		$hist->origFilename = $timestamp.$hist->filename;
 		$hist->is_active = 1;
+		LogDao::logCreate($this->table, 'uploadedFilename', $file['file']->getClientOriginalName());
 		return $hist->save();
 	}
 
@@ -49,13 +50,27 @@ class myFileDao extends myFile{
 	}
 
 	public function deleteFile($key){
-		$this->where('key', $key)->delete();
+		$query = $this->where('key', $key);
+		$rows = $query->get();
+		$old_values = '';
+		$first = 1;
+		foreach ($rows as $row) {
+			if(!$first){
+				$old_values .= ', ';
+			}
+			$old_values .= $row->origFilename.'.'.$row->extension;
+			$first=0;
+		}
+		LogDao::logDelete($this->table, $old_values);
+		$query->delete();
 	}
 
 	public function renameFile($key){
-		$this->where('key', $key)
-			->where('is_active', true)
-			->update(array('filename' => Input::get('fileName')));
+		$query = $this->where('key', $key)
+				->where('is_active', true);
+		$row = $query->get()->first();
+		LogDao::logEdit($this->table, 'filename', $row->filename, Input::get('fileName'));
+		$query->update(array('filename' => Input::get('fileName')));
 	}
 
 	public function getRevisionHistory($key){
@@ -77,6 +92,7 @@ class myFileDao extends myFile{
 	}
 
 	public function setActive($key, $id){
+		$prev = $this->where('key', $key)->where('is_active', true)->pluck('id');
 		$this->where('key', $key)
 				->update(array(
 					'is_active' => false
@@ -85,6 +101,7 @@ class myFileDao extends myFile{
 			->update(array(
 					'is_active' => true
 				));
+		LogDao::logEdit($this->table, 'is_active', $prev, $id);
 	}
 
 	public function isValidId($key, $id){
@@ -96,10 +113,20 @@ class myFileDao extends myFile{
 
 	public function deleteFilesByOwnership($id){
 		try {
-			$this->join('keys', 'keys.key', '=', 'files.key')
-					->where('is_active', true)
-					->where('id_user', $id)
-					->delete();
+			$query = $this->join('keys', 'keys.key', '=', 'files.key')
+						->where('id_user', $id);
+			$rows = $query->get();
+			$old_values = '';
+			$first = 1;
+			foreach($rows as $row){
+				if(!$first){
+					$old_values .= ', ';
+				}
+				$old_values .= $row->id;
+				$first = 0;
+			}
+			LogDao::logDelete($this->table, $old_values);
+			$query->delete();
 		} catch (Exception $e) {
 			return false;
 		}
