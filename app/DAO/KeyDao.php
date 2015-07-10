@@ -114,17 +114,19 @@ class KeyDao extends Key{
 	public function deleteFilesByOwnership($id){
 		$query = $this->where('id_user','=',$id);
 		$rows = $query->get();
-		$first = 1;
-		$old_values = '';
-		foreach($rows as $row){
-			if(!$first){
-				$old_values .= ', ';
+		if(!$rows->isEmpty()){
+			$first = 1;
+			$old_values = '';
+			foreach($rows as $row){
+				if(!$first){
+					$old_values .= ', ';
+				}
+				$old_values .= $row->key;
+				$first = 0;
 			}
-			$old_values .= $row->key;
-			$first = 0;
+			LogDao::logDelete($this->table, $old_values);
+			$query->delete();
 		}
-		LogDao::logDelete($this->table, $old_values);
-		$query->delete();
 	}
 
 	public function getByKey($key){

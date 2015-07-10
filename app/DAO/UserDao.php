@@ -32,7 +32,7 @@ class UserDao extends User
 	}
 
 	public function saveUser($regData){
-		LogDao::logCreate($this->table, 'email, username, password, name', $this->email.', '.$this->username);
+		LogDao::logCreate($this->table, 'email, username, password, name', $regData['email'].', '.$regData['username']);
 		$regData['password'] = Hash::make($regData['password']);
 		return $this->create($regData);
 	}

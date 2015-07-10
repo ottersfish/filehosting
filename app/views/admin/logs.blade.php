@@ -38,6 +38,7 @@
 										<td>{{ $rownum++ }}</td>
 										<td>{{ $log->table_affected }}</td>
 										<td>{{ $log->column_affected }}</td>
+										<td>{{ $log->action }}</td>
 										<td>
 											@if($log->old_value){{ $log->old_value }}
 											@else {{ '-' }}
@@ -48,7 +49,6 @@
 											@else {{ '-' }}
 											@endif
 										</td>
-										<td>{{ $log->action }}</td>
 										<td>{{ $log->username }}</td>
 										<td>{{ $log->created_at }}</td>
 									</tr>

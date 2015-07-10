@@ -116,17 +116,19 @@ class myFileDao extends myFile{
 			$query = $this->join('keys', 'keys.key', '=', 'files.key')
 						->where('id_user', $id);
 			$rows = $query->get();
-			$old_values = '';
-			$first = 1;
-			foreach($rows as $row){
-				if(!$first){
-					$old_values .= ', ';
+			if(!$rows->isEmpty()){
+				$old_values = '';
+				$first = 1;
+				foreach($rows as $row){
+					if(!$first){
+						$old_values .= ', ';
+					}
+					$old_values .= $row->filename.'.'.$row->extension;
+					$first = 0;
 				}
-				$old_values .= $row->id;
-				$first = 0;
+				LogDao::logDelete($this->table, $old_values);
+				$query->delete();
 			}
-			LogDao::logDelete($this->table, $old_values);
-			$query->delete();
 		} catch (Exception $e) {
 			return false;
 		}
