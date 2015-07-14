@@ -38,7 +38,7 @@ Now is written using Laravel 4 Framework.
 If you found any bugs please feel free to contact me at fendy.fendy95@gmail.com
 
 ## Changelog
-v0.2.2 Logging added for create, update, delete database operation.
-v0.2.1 File revision improvements - able to set the active file, from previous uploaded files.
+v0.2.2 Logging added for create, update, delete database operation.  
+v0.2.1 File revision improvements - able to set the active file, from previous uploaded files.  
 v0.2 Added file revision feature (keeping the same link)  
 v0.1 first-release
