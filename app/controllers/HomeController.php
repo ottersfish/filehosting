@@ -15,11 +15,12 @@ class HomeController extends BaseController {
 	|
 	*/
 
-	protected $keyDao, $myFileDao;
+	protected $userDao, $keyDao, $myFileDao;
 
-	public function __construct(KeyDao $keyDao, myFileDao $myFileDao){
+	public function __construct(KeyDao $keyDao, myFileDao $myFileDao, UserDao $userDao){
 		$this->keyDao = $keyDao;
 		$this->myFileDao = $myFileDao;
+		$this->userDao = $userDao;
 	}
 
 	public function getIndex(){
@@ -182,6 +183,32 @@ class HomeController extends BaseController {
 		}
 		else{
 			return Response::view('notfound');
+		}
+	}
+
+	public function getProfile(){
+		return View::make('home.profile')
+			->with('user', $this->userDao->getProfile(Auth::user()->id))
+			->with('method', 'put');
+	}
+
+	public function putProfile(){
+		$updData = Input::only('name', 'password', 'con_password');
+		$validation_result = $this->userDao->validateEditProf($updData);
+		if(!$validation_result->fails()){
+			if($this->userDao->editProfile(Auth::user()->id)){
+				return Redirect::back()
+					->with('messages', 'Successfully update profile.');
+			}
+			else{
+				return Redirect::back()
+					->with('errors', 'Couldn\'t update profile, please try again.');
+			}
+		}
+		else{
+			return Redirect::back()
+				->withInput()
+				->withErrors($validation_result);
 		}
 	}
 }

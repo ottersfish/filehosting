@@ -74,5 +74,32 @@ class UserDao extends User
 	public function userExists($id){
 		return $this->find($id);
 	}
+
+	public function getProfile($id){
+		return $this->where('id', $id)->get(array('name'))->first();
+	}
+
+	public function validateEditProf($updData){
+		$rules=array(
+			'name' => 'required',
+			'password' => 'required',
+			'con_password' => 'required|same:password',
+		);
+
+		return Validator::make($updData, $rules);
+	}
+
+	public function editProfile($id){
+		$query = $this->where('id', $id);
+		$row = $query->get(array('name', 'password'))->first();
+		$query->update(array(
+			'name' => Input::get('name'),
+			'password' => Hash::make(Input::get('password'))
+			));
+		LogDao::logEdit($this->table, 'users', 
+			$row->name.', '.$row->password, 
+			Input::get('name').', '.Hash::make(Input::get('password')))	;
+		return true;
+	}
 }
 ?>

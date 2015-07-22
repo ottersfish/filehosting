@@ -36,7 +36,7 @@ class LogDao{
 
 	public static function getLogs(){
 		$logInstance = new Logs;
-		return $logInstance->join('users', 'logs.user', '=', 'users.id')->get();
+		return $logInstance->paginate(10);
 	}
 }
 ?>

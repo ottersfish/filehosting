@@ -19,6 +19,8 @@ Route::group(array('before' => 'auth'),function(){
 	Route::get('admin/files/{id}', 'AdminController@files');
 	Route::get('admin/users/{id}/delete', 'AdminController@delete');
 	Route::resource('admin', 'AdminController');
+	Route::get('home/profile', 'HomeController@getProfile');
+	Route::put('home/profile', 'HomeController@putProfile');
 	Route::get('home/files', 'HomeController@getFiles');
 	Route::get('home/edit/{key}/{method}', 'HomeController@edit');
 	Route::get('home/edit/{key}/setactive/{id}', 'HomeController@setActive');

@@ -49,6 +49,6 @@
 				{{ Form::close() }}
 			</div>
 			<div class="panel-footer"><p class="panel-help">And enjoy the easiest hosting ever!</p></div>
-		</div>  
+		</div>
 	</div>
 @stop

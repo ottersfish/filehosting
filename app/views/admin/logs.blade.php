@@ -35,7 +35,7 @@
 							<?php $rownum=1; ?>
 								@foreach($logs as $log)
 									<tr>
-										<td>{{ $rownum++ }}</td>
+										<td>{{ $log->id }}</td>
 										<td>{{ $log->table_affected }}</td>
 										<td>{{ $log->column_affected }}</td>
 										<td>{{ $log->action }}</td>
@@ -49,7 +49,7 @@
 											@else {{ '-' }}
 											@endif
 										</td>
-										<td>{{ $log->username }}</td>
+										<td>{{ $log->user }}</td>
 										<td>{{ $log->created_at }}</td>
 									</tr>
 								@endforeach
@@ -58,6 +58,7 @@
 					</div>
 				<!-- </div> -->
 			</div>
+					{{ $logs->links() }}
 		</div>
 	</div>
 @stop

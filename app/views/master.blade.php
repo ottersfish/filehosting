@@ -54,6 +54,8 @@
 		 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome back, @if(!Auth::check()) {{'Guest'}}@else {{Auth::user()->username}}@endif! <span class="caret"></span></a>
 		 						<ul class="dropdown-menu">
 		 							@if(Auth::check())
+		 								<li><a href="{{url('home/profile')}}">Profile</a></li>
+		 								<li class="divider"></li>
 										<li><a href="{{url('login/logout')}}">Logout </a></li>
 									@else
 										<li><a href="{{url('login/register')}}">Register </a></li>

@@ -69,8 +69,8 @@ class myFileDao extends myFile{
 		$query = $this->where('key', $key)
 				->where('is_active', true);
 		$row = $query->get()->first();
-		LogDao::logEdit($this->table, 'filename', $row->filename, Input::get('fileName'));
 		$query->update(array('filename' => Input::get('fileName')));
+		LogDao::logEdit($this->table, 'filename', $row->filename, Input::get('fileName'));
 	}
 
 	public function getRevisionHistory($key){
