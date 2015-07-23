@@ -23,8 +23,9 @@ class myFileDao extends myFile{
 
 	public function getFileInfo($details){
 		$file = $this->getFileByKey($details->key);
+		$parent_folder = $details->folder_key;
 		$id = $details->id_user;
-		$targetDir = storage_path('files/'.$id.'/'.$details->key);
+		$targetDir = storage_path('files/'.$id.'/'.$parent_folder.'/'.$details->key);
 		$fileName = $file->origFilename.'.'.$file->extension;
 		$fileSize = Helpers::formatFileSize(filesize($targetDir.'/'.$fileName));
 
@@ -42,7 +43,7 @@ class myFileDao extends myFile{
 		$ret = new stdClass();
 		$file = $this->getFileByKey($details->key);
 		$id = $details->id_user;
-		$targetDir = storage_path('files/'.$id.'/'.$file->key);
+		$targetDir = storage_path('files/'.$id.'/'.$details->folder_key.'/'.$file->key);
 		$fileName = $file->origFilename.'.'.$file->extension;
 		$ret->path = $targetDir.'/'.$fileName;
 		$ret->fileName = $file->filename.'.'.$file->extension;

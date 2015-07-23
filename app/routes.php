@@ -25,14 +25,19 @@ Route::group(array('before' => 'auth'),function(){
 	Route::get('home/edit/{key}/{method}', 'HomeController@edit');
 	Route::get('home/edit/{key}/setactive/{id}', 'HomeController@setActive');
 	Route::post('home/edit/{key}/revision', 'HomeController@doRevision');
-	Route::put('home/edit/', 'HomeController');
-	Route::delete('home/edit', 'HomeController');
+	Route::post('home/addfolder', 'HomeController@postAddFolder');
+	Route::put('home/edit', 'HomeController@putEdit');
+	Route::delete('home/edit', 'HomeController@deleteEdit');
 });
 
 Route::controller('login/password', 'RemindersController');
 
 Route::get('notfound',function(){
 	return View::make('notfound');
+});
+
+Route::get('unauthorized',function(){
+	return View::make('unauthorized');
 });
 
 Route::get('home/do_download/{key}','HomeController@doDownload');
@@ -42,3 +47,5 @@ Route::controller('home','HomeController');
 Route::controller('login','LoginController');
 
 Route::post('login/{param}','LoginController@test');
+
+Route::get('initiate','HomeController@initiate');

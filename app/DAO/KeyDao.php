@@ -35,6 +35,7 @@ class KeyDao extends Key{
 
 	public function saveKey($file, Key $item){
 		$item->path = '/';
+		$item->folder_key = $file['folder'];
 		$item->key = $this->genKey();
 		if(Auth::check()){
 			$item->id_user=Auth::user()->id;

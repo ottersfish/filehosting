@@ -27,6 +27,7 @@ class AddTables extends Migration {
 			$table->increments('id');
 			$table->string('path');
 			$table->string('key');
+			$table->string('folder_key')->references('key')->on('folders');
 			$table->integer('id_user')->references('id')->on('users');
 			$table->timestamps();
 		});

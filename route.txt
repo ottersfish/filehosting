@@ -15,10 +15,15 @@ Warning: PHP Startup: Unable to load dynamic library 'C:\xampp\php\ext\php_oci8.
 |        | PUT admin/{admin}                                                     | admin.update  | AdminController@update            | auth           |               |
 |        | PATCH admin/{admin}                                                   |               | AdminController@update            | auth           |               |
 |        | DELETE admin/{admin}                                                  | admin.destroy | AdminController@destroy           | auth           |               |
+|        | GET|HEAD home/profile                                                 |               | HomeController@getProfile         | auth           |               |
+|        | PUT home/profile                                                      |               | HomeController@putProfile         | auth           |               |
 |        | GET|HEAD home/files                                                   |               | HomeController@getFiles           | auth           |               |
 |        | GET|HEAD home/edit/{key}/{method}                                     |               | HomeController@edit               | auth           |               |
-|        | PUT home/edit                                                         |               | HomeController                    | auth           |               |
-|        | DELETE home/edit                                                      |               | HomeController                    | auth           |               |
+|        | GET|HEAD home/edit/{key}/setactive/{id}                               |               | HomeController@setActive          | auth           |               |
+|        | POST home/edit/{key}/revision                                         |               | HomeController@doRevision         | auth           |               |
+|        | POST home/addfolder                                                   |               | HomeController@postAddFolder      | auth           |               |
+|        | PUT home/edit                                                         |               | HomeController@putEdit            | auth           |               |
+|        | DELETE home/edit                                                      |               | HomeController@deleteEdit         | auth           |               |
 |        | GET|HEAD login/password/remind/{one?}/{two?}/{three?}/{four?}/{five?} |               | RemindersController@getRemind     |                |               |
 |        | POST login/password/remind/{one?}/{two?}/{three?}/{four?}/{five?}     |               | RemindersController@postRemind    |                |               |
 |        | GET|HEAD login/password/reset/{one?}/{two?}/{three?}/{four?}/{five?}  |               | RemindersController@getReset      |                |               |
@@ -36,6 +41,9 @@ Warning: PHP Startup: Unable to load dynamic library 'C:\xampp\php\ext\php_oci8.
 |        | GET|HEAD home/success/{one?}/{two?}/{three?}/{four?}/{five?}          |               | HomeController@getSuccess         |                |               |
 |        | PUT home/edit/{one?}/{two?}/{three?}/{four?}/{five?}                  |               | HomeController@putEdit            |                |               |
 |        | DELETE home/edit/{one?}/{two?}/{three?}/{four?}/{five?}               |               | HomeController@deleteEdit         |                |               |
+|        | GET|HEAD home/profile/{one?}/{two?}/{three?}/{four?}/{five?}          |               | HomeController@getProfile         |                |               |
+|        | PUT home/profile/{one?}/{two?}/{three?}/{four?}/{five?}               |               | HomeController@putProfile         |                |               |
+|        | POST home/add-folder/{one?}/{two?}/{three?}/{four?}/{five?}           |               | HomeController@postAddFolder      |                |               |
 |        | GET|HEAD|POST|PUT|PATCH|DELETE home/{_missing}                        |               | HomeController@missingMethod      |                |               |
 |        | GET|HEAD login/index/{one?}/{two?}/{three?}/{four?}/{five?}           |               | LoginController@getIndex          |                |               |
 |        | GET|HEAD login                                                        |               | LoginController@getIndex          |                |               |
@@ -46,4 +54,5 @@ Warning: PHP Startup: Unable to load dynamic library 'C:\xampp\php\ext\php_oci8.
 |        | POST login/register/{one?}/{two?}/{three?}/{four?}/{five?}            |               | LoginController@postRegister      |                |               |
 |        | GET|HEAD|POST|PUT|PATCH|DELETE login/{_missing}                       |               | LoginController@missingMethod     |                |               |
 |        | POST login/{param}                                                    |               | LoginController@test              |                |               |
+|        | GET|HEAD initiate                                                     |               | HomeController@initiate           |                |               |
 +--------+-----------------------------------------------------------------------+---------------+-----------------------------------+----------------+---------------+
