@@ -62,8 +62,8 @@ class myFileDao extends myFile{
 			$old_values .= $row->origFilename.'.'.$row->extension;
 			$first=0;
 		}
-		LogDao::logDelete($this->table, $old_values);
 		$query->delete();
+		LogDao::logDelete($this->table, $old_values);
 	}
 
 	public function renameFile($key){
@@ -134,6 +134,30 @@ class myFileDao extends myFile{
 			return false;
 		}
 		return true;
+	}
+
+	public function deleteFilesinFolder($folder_key){
+		$query = $this->join('keys', 'keys.key', '=', 'files.key')
+					->whereExists(function($query) use ($folder_key){
+						$query->select('id')
+							->from('keys')
+							->whereRaw('files.key = keys.key')
+							->where('keys.folder_key', '=', $folder_key);
+					});
+		// echo $query->toSql(); return;
+		// var_dump($query->get());return;
+		$rows = $query->get();
+		$old_values = "";
+		$first = 1;
+		foreach($rows as $row){
+			if(!$first){
+				$old_values .= ', ';
+			}
+			$old_values .= $row->id;
+			$first = 0;
+		}
+		LogDao::logDelete($this->table, $old_values);
+		return $query->delete();
 	}
 }
 ?>

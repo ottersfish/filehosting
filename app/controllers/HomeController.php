@@ -37,7 +37,7 @@ class HomeController extends BaseController {
 		else{ 
 			if(Auth::check())
 				return View::make('home.index')
-					->with('folders', $this->folderDao->getFolderLists(Auth::user()->id));
+					->with('folders', $this->folderDao->getFolderList(Auth::user()->id));
 			else{
 				return View::make('home.index');
 			}
@@ -58,7 +58,6 @@ class HomeController extends BaseController {
 		else{
 			$folder = $this->folderDao->getFolderKeyByOwnerandName(2, '/');
 		}
-		// echo $folder;return;
 		$fileData = array(
 			'file' 		=> Input::file('userFile'),
 			'folder' 	=> $folder
@@ -102,7 +101,7 @@ class HomeController extends BaseController {
 	public function getFiles(){
 		return View::make('home.files')
 				->with('files', $this->keyDao->getFiles(Auth::user()->id))
-				->with('folders', $this->folderDao->getFolderLists(Auth::user()->id));
+				->with('folders', $this->folderDao->getFolderList(Auth::user()->id));
 	}
 
 	public function getDownload($key){
@@ -134,15 +133,18 @@ class HomeController extends BaseController {
 				}
 				else if($method == 'edit'){
 					$fileInfo->fileName = basename($fileInfo->fileName, '.'.$fileInfo->extension);
+					$folders = $this->folderDao->getFolderList(Auth::user()->id);
 					return View::make('home.edit')
 						->with('file', $fileInfo)
-						->with('method', 'put');
+						->with('folders', $folders)
+						->with('method', 'put')
+						->with('cur_folder', $this->folderDao->getFolderName($this->keyDao->getFolderKeyByKey($key)));;
 				}
 				else if($method == 'revision'){
 					$revHistory = $this->myFileDao->getRevisionHistory($key);
 					return View::make('home.revisions')
-							->with('file', $fileInfo)
-							->with('revHistory', $revHistory);
+						->with('file', $fileInfo)
+						->with('revHistory', $revHistory);
 				}
 				else{
 					return Response::view('notfound');
@@ -157,9 +159,19 @@ class HomeController extends BaseController {
 		}
 	}
 
+	public function putEditFolder($key){
+		if($this->folderDao->exists(Input::get('folder')) and Auth::user()->ownsFolder(Input::get('folder'))){
+			$this->keyDao->moveFile($key);
+			return Redirect::to('home/edit/'.$key.'/edit')->with('message', 'File moved successfully.');
+		}
+		else{
+			return Redirect::back()->withErrors('The folder you requested does not exists.');
+		}
+	}
+
 	public function putEdit($key){
 		$this->myFileDao->renameFile($key);
-		return Redirect::to('home/edit/'.$key.'/edit')->with('message', 'File was successfully edited');
+		return Redirect::to('home/edit/'.$key.'/edit')->with('message', 'File was successfully edited.');
 	}
 
 	public function deleteEdit($key){
@@ -176,7 +188,10 @@ class HomeController extends BaseController {
 	}
 
 	public function doRevision($key){
-		$file = array('file' => Input::file('userFile'));
+		$file = array(
+			'file' 		=> Input::file('userFile'),
+			'folder'	=> $this->keyDao->getByKey($key)->folder_key
+		);
 		$validation_result = $this->keyDao->validate($file);
 		if(!$validation_result->fails()){
 			$fileKey = $this->keyDao->getByKey($key);
@@ -251,6 +266,19 @@ class HomeController extends BaseController {
 			'folder_name' 	=> Input::get('folder_name'),
 			'owner' 		=> Auth::user()->id
 		);
+
+		$messages = array(
+			'alphanum' => ':attribute must contain only number and characters'
+		);
+		$rules = array(
+			'folder_name' 	=> 'alphanum'
+		);
+		$foldername_validation_result = Validator::make(Input::all(), $rules, $messages);
+		
+		if($foldername_validation_result->fails()){
+			return Redirect::back()->withInput()->withErrors($foldername_validation_result);
+		}
+
 		if($this->folderDao->exists($folderData['parent'])){
 			if(Auth::user()->ownsFolder($folderData['parent'])){
 				$folderData['folder_name'] = $this->folderDao->getFolderName($folderData['parent']).$folderData['folder_name'].'/';
@@ -279,5 +307,87 @@ class HomeController extends BaseController {
 			return Redirect::back()
 				->withErrors('Folder doesn\'t exists!');
 		}
+	}
+
+	public function getFolders($folder_name = NULL){
+		if($folder_name){
+			$folder_name = '/'.$folder_name.'/';
+		}
+		else{
+			$folder_name = '/';
+		}
+		$folder_key = $this->folderDao->getKeyByName($folder_name, Auth::user()->id);
+		return View::make('home.folders')
+			->with('folder_name', $folder_name)
+			->with('folders', $this->folderDao->getFolderByParent($folder_key))
+			->with('files', $this->keyDao->getFilesByFolderandOwner($folder_key, Auth::user()->id));
+	}
+
+	public function getEditFolder($key, $method){
+		if($this->folderDao->exists($key)){
+			if(Auth::user()->canEditFolder($key)){
+				$folder = $this->folderDao->getFolderByKey($key);
+				if($method == 'delete'){
+					return View::make('home.editFolder')
+						->with('folder', $folder)
+						->with('method', 'delete');
+				}
+				else if($method == 'edit'){
+					$folder = $this->folderDao->getFolderByKey($key);
+					return View::make('home.editFolder')
+						->with('folder', $folder)
+						->with('method', 'put');
+				}
+				else{
+					return Response::view('notfound');
+				}
+			}
+			else{
+				return Redirect::to('home')->withErrors('You aren\'t authorized to see this page.');
+			}
+		}
+		else{
+			return Response::view('notfound');
+		}
+	}
+
+	public function putRenameFolder($key){
+		$new_name = Input::get('folder_name');
+		$messages = array(
+			'alphanum' => ':attribute must contain only number and characters'
+		);
+		$rules = array(
+			'folder_name' 	=> 'alphanum'
+		);
+		$foldername_validation_result = Validator::make(Input::all(), $rules, $messages);
+
+		if($foldername_validation_result->fails()){
+			return Redirect::back()->withInput()->withErrors($foldername_validation_result);
+		}
+		$folderData['folder_name'] = $this->folderDao->getFolderName($this->folderDao->getFolderByKey($key)->parent).$new_name.'/';
+		$validation_result = $this->folderDao->validate($folderData);
+		if(!$validation_result->fails()){
+			if($this->folderDao->renameFolder($key, $new_name)){
+				return Redirect::back()
+				->with('message', 'Successfully rename folder');
+			}
+			else{
+				return Redirect::back()
+				->withErrors('An error occured please try again.');
+			}
+		}
+		else{
+			return Redirect::back()
+				->withInput()
+				->withErrors($validation_result);
+		}
+	}
+
+	public function deleteEditFolder($key){
+		$this->myFileDao->deleteFilesinFolder($key);
+		$this->keyDao->deleteKeysinFolder($key);
+		$this->folderDao->deleteFolder($key);
+		return Redirect::to('home/folders')
+			->with('messages', 'Folder deleted succesfully.');
 	}
 }

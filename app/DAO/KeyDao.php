@@ -58,7 +58,7 @@ class KeyDao extends Key{
 
 	public function deleteKey($key){
 		$file = $this->where('key', $key)->get()->first();
-		$targetDir = $file->id_user.'/'.$key;
+		$targetDir = $file->id_user.'/'.$file->folder_key.'/'.$key;
 		$this->deleteFilesAndFolder($targetDir);
 		LogDao::logDelete($this->table, $key);
 		$file->delete();
@@ -89,9 +89,10 @@ class KeyDao extends Key{
 
 	public function getFiles($owner){
 		return $this->join('files', 'keys.key', '=', 'files.key')
+					->join('folders', 'keys.folder_key', '=', 'folders.key')
 					->where('is_active', true)
 					->where('id_user', $owner)
-					->select('*')
+					->select(array('folders.folder_name', 'keys.folder_key', 'keys.key', 'files.origFilename', 'extension', 'files.filename'))
 					->get();
 	}
 
@@ -132,6 +133,46 @@ class KeyDao extends Key{
 
 	public function getByKey($key){
 		return $this->where('key', $key)->get()->first();
+	}
+
+	public function getFilesByFolderandOwner($folder_key, $owner){
+		return $this->join('files', 'keys.key', '=', 'files.key')
+					->where('is_active', true)
+					->where('id_user', $owner)
+					->where('folder_key', $folder_key)
+					->select(array('keys.folder_key', 'keys.key', 'files.origFilename', 'extension', 'files.filename'))
+					->get();
+	}
+
+	public function moveFile($key){
+		$query = $this->where('key', $key);
+		$file = $query->get()->first();
+		$old_path = storage_path('files/'.$file->id_user.'/'.$file->folder_key.'/'.$key);
+		$new_path = storage_path('files/'.$file->id_user.'/'.Input::get('folder').'/'.$key);
+		rename($old_path, $new_path);
+		$query->update(array('folder_key' => Input::get('folder')));
+	}
+
+	public function getFolderKeyByKey($key){
+		return $this->where('key', $key)->pluck('folder_key');
+	}
+
+	public function deleteKeysinFolder($folder_key){
+		$query = $this->where('folder_key', $folder_key);
+		// echo $query->toSql();
+		// var_dump($query->get());
+		$old_values = '';
+		$rows = $query->get();
+		$first = 1;
+		foreach($rows as $row){
+			if(!$first){
+				$old_values .= ', ';
+			}
+			$old_values .= $row->key;
+			$first = 0;
+		}
+		LogDao::logDelete($this->table, $old_values);
+		return $query->delete();
 	}
 }
 ?>

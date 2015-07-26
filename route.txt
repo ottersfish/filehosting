@@ -18,18 +18,21 @@ Warning: PHP Startup: Unable to load dynamic library 'C:\xampp\php\ext\php_oci8.
 |        | GET|HEAD home/profile                                                 |               | HomeController@getProfile         | auth           |               |
 |        | PUT home/profile                                                      |               | HomeController@putProfile         | auth           |               |
 |        | GET|HEAD home/files                                                   |               | HomeController@getFiles           | auth           |               |
+|        | GET|HEAD home/folders/{folder_name?}                                  |               | HomeController@getFolders         | auth           |               |
 |        | GET|HEAD home/edit/{key}/{method}                                     |               | HomeController@edit               | auth           |               |
 |        | GET|HEAD home/edit/{key}/setactive/{id}                               |               | HomeController@setActive          | auth           |               |
 |        | POST home/edit/{key}/revision                                         |               | HomeController@doRevision         | auth           |               |
 |        | POST home/addfolder                                                   |               | HomeController@postAddFolder      | auth           |               |
-|        | PUT home/edit                                                         |               | HomeController@putEdit            | auth           |               |
-|        | DELETE home/edit                                                      |               | HomeController@deleteEdit         | auth           |               |
+|        | PUT home/edit/{key}                                                   |               | HomeController@putEdit            | auth           |               |
+|        | PUT home/editFolder/{key}                                             |               | HomeController@putEditFolder      | auth           |               |
+|        | DELETE home/edit/{key}                                                |               | HomeController@deleteEdit         | auth           |               |
 |        | GET|HEAD login/password/remind/{one?}/{two?}/{three?}/{four?}/{five?} |               | RemindersController@getRemind     |                |               |
 |        | POST login/password/remind/{one?}/{two?}/{three?}/{four?}/{five?}     |               | RemindersController@postRemind    |                |               |
 |        | GET|HEAD login/password/reset/{one?}/{two?}/{three?}/{four?}/{five?}  |               | RemindersController@getReset      |                |               |
 |        | POST login/password/reset/{one?}/{two?}/{three?}/{four?}/{five?}      |               | RemindersController@postReset     |                |               |
 |        | GET|HEAD|POST|PUT|PATCH|DELETE login/password/{_missing}              |               | RemindersController@missingMethod |                |               |
 |        | GET|HEAD notfound                                                     |               | Closure                           |                |               |
+|        | GET|HEAD unauthorized                                                 |               | Closure                           |                |               |
 |        | GET|HEAD home/do_download/{key}                                       |               | HomeController@doDownload         |                |               |
 |        | GET|HEAD home/success/{key}                                           |               | HomeController@getSuccess         |                |               |
 |        | GET|HEAD home/index/{one?}/{two?}/{three?}/{four?}/{five?}            |               | HomeController@getIndex           |                |               |
@@ -39,11 +42,15 @@ Warning: PHP Startup: Unable to load dynamic library 'C:\xampp\php\ext\php_oci8.
 |        | GET|HEAD home/files/{one?}/{two?}/{three?}/{four?}/{five?}            |               | HomeController@getFiles           |                |               |
 |        | GET|HEAD home/download/{one?}/{two?}/{three?}/{four?}/{five?}         |               | HomeController@getDownload        |                |               |
 |        | GET|HEAD home/success/{one?}/{two?}/{three?}/{four?}/{five?}          |               | HomeController@getSuccess         |                |               |
+|        | PUT home/edit-folder/{one?}/{two?}/{three?}/{four?}/{five?}           |               | HomeController@putEditFolder      |                |               |
 |        | PUT home/edit/{one?}/{two?}/{three?}/{four?}/{five?}                  |               | HomeController@putEdit            |                |               |
 |        | DELETE home/edit/{one?}/{two?}/{three?}/{four?}/{five?}               |               | HomeController@deleteEdit         |                |               |
 |        | GET|HEAD home/profile/{one?}/{two?}/{three?}/{four?}/{five?}          |               | HomeController@getProfile         |                |               |
 |        | PUT home/profile/{one?}/{two?}/{three?}/{four?}/{five?}               |               | HomeController@putProfile         |                |               |
 |        | POST home/add-folder/{one?}/{two?}/{three?}/{four?}/{five?}           |               | HomeController@postAddFolder      |                |               |
+|        | GET|HEAD home/folders/{one?}/{two?}/{three?}/{four?}/{five?}          |               | HomeController@getFolders         |                |               |
+|        | GET|HEAD home/edit-folder/{one?}/{two?}/{three?}/{four?}/{five?}      |               | HomeController@getEditFolder      |                |               |
+|        | GET|HEAD home/editfolders/{one?}/{two?}/{three?}/{four?}/{five?}      |               | HomeController@getEditfolders     |                |               |
 |        | GET|HEAD|POST|PUT|PATCH|DELETE home/{_missing}                        |               | HomeController@missingMethod      |                |               |
 |        | GET|HEAD login/index/{one?}/{two?}/{three?}/{four?}/{five?}           |               | LoginController@getIndex          |                |               |
 |        | GET|HEAD login                                                        |               | LoginController@getIndex          |                |               |

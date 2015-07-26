@@ -39,7 +39,7 @@
 							?>
 								@foreach($files as $file)
 								<?php
-									$targetdir=storage_path('files/'.$file->id_user.'/'.$file->key);
+									$targetdir=storage_path('files/'.$file->id_user.'/'.$file->folder_key.'/'.$file->key);
 									$filename = $file->origFilename.'.'.$file->extension;
 									$filesize = Helpers::formatFileSize(filesize($targetdir.'/'.$filename));
 								?>

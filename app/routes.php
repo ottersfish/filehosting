@@ -22,12 +22,18 @@ Route::group(array('before' => 'auth'),function(){
 	Route::get('home/profile', 'HomeController@getProfile');
 	Route::put('home/profile', 'HomeController@putProfile');
 	Route::get('home/files', 'HomeController@getFiles');
+	Route::get('home/folders/{folder_name?}', 'HomeController@getFolders')
+		->where('folder_name', '(.*)');
 	Route::get('home/edit/{key}/{method}', 'HomeController@edit');
+	Route::put('home/editFolder/{key}', 'HomeController@putEditFolder');
 	Route::get('home/edit/{key}/setactive/{id}', 'HomeController@setActive');
+	Route::get('home/edit-folder/{key}/{method}', 'HomeController@getEditFolder');
+	Route::put('home/edit-folder/{key}', 'HomeController@putRenameFolder');
+	Route::delete('home/edit-folder/{key}', 'HomeController@deleteEditFolder');
 	Route::post('home/edit/{key}/revision', 'HomeController@doRevision');
 	Route::post('home/addfolder', 'HomeController@postAddFolder');
-	Route::put('home/edit', 'HomeController@putEdit');
-	Route::delete('home/edit', 'HomeController@deleteEdit');
+	Route::put('home/edit/{key}', 'HomeController@putEdit');
+	Route::delete('home/edit/{key}', 'HomeController@deleteEdit');
 });
 
 Route::controller('login/password', 'RemindersController');
