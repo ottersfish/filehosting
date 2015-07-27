@@ -42,7 +42,18 @@ class FolderDao extends Folder{
 		);
 
 		$rules = array(
-			'folder_name' 	=> 'required|unique:folders,folder_name,NULL,id,owner,'.Auth::user()->id
+			'folder_name' 	=> 'required',
+			'new_folder_name' => 'unique:folders,folder_name,NULL,id,owner,'.Auth::user()->id
+		);
+
+		$validation_result = Validator::make($folderData, $rules, $messages);
+		if($validation_result->fails()){
+			return $validation_result;
+		}
+
+		$folderData['folder_name'] = $folderData =['new_folder_name'];
+		$rules = array(
+			'folder_name' 	=> 'unique:folders,folder_name,NULL,id,owner,'.Auth::user()->id
 		);
 
 		return Validator::make($folderData, $rules, $messages);
@@ -115,11 +126,19 @@ class FolderDao extends Folder{
 
 	private function deleteChildFolder($parent){
 		$folders = $this->where('parent', $parent)->get();
+		$old_values = '';
+		$first = 1;
 		foreach($folders as $folder){
 			$target_dir = $folder->owner.'/'.$folder->key;
 			$this->deleteFolderPhysically($target_dir);
 			$folder->delete();
+			if(!$first){
+				$old_values .= ', ';
+			}
+			$old_values .= $folder->key;
+			$first = 0;
 		}
+		LogDao::logDelete($this->table, $old_values);
 	}
 
 	public function renameFolder($key, $new_name){
@@ -141,6 +160,53 @@ class FolderDao extends Folder{
 		$this->deleteChildFolder($key);
 		$this->deleteFolderPhysically($target_dir);
 		return $query->delete();
+	}
+
+	public function getFolderListAdmin(){
+		return $this->all();
+	}
+
+	public function getFolderByOwnership($id){
+		return $this->leftJoin('folders as fold', 'folders.parent', '=', 'fold.key')
+				->where('folders.owner', $id)
+				->select(array(
+					'folders.folder_name',
+					'fold.folder_name as parent'
+				))
+				->orderBy('folders.id')
+				->get();
+	}
+
+	public function deleteFoldersByOwnership($owner){
+		$query = $this->where('owner', $owner);
+		$rows = $query->get();
+		$old_values = '';
+		$first = 1;
+		foreach($rows as $row){
+			if(!$first){
+				$old_values .= ", ";
+			}
+			$old_values .= $row->key;
+			$first = 0;
+		}
+		LogDao::logDelete($this->table, $old_values);
+		$target_dir = $owner;
+		$this->deleteFolderPhysically($target_dir);
+		return $query->delete();
+	}
+
+	public function getAllFolderListAdmin(){
+		return $this->leftJoin('folders as fold', 'fold.key', '=', 'folders.parent')
+				->join('users', 'users.id', '=', 'folders.owner')
+				->orderBy('folders.owner')
+				->orderBy('folders.id')
+				->select((array(
+					'folders.key',
+					'folders.folder_name',
+					'fold.folder_name as parent',
+					'users.username'
+				)))
+				->paginate(10);
 	}
 }
 ?>

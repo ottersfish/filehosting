@@ -14,6 +14,8 @@ Now is written using Laravel 4 Framework.
 5. Do the migration using 'php artisan' by running this command  
   ```
   php artisan migrate  
+  ```  
+  ```
   php artisan db:seed  
   ```
 6. To start the server you can use this command  
@@ -32,13 +34,14 @@ Now is written using Laravel 4 Framework.
 
 ## To be added
 1. File revision system (added)
-2. User groups to share files within (seems still a long way go xD)
-3. File-folder system.
+2. User groups to share files within
+3. File-folder system (added)
 
 If you found any bugs please feel free to contact me at fendy.fendy95@gmail.com
 
 ## Changelog
+v0.3   file-folder system added
 v0.2.2 Logging added for create, update, delete database operation.  
 v0.2.1 File revision improvements - able to set the active file, from previous uploaded files.  
-v0.2 Added file revision feature (keeping the same link)  
-v0.1 first-release
+v0.2   Added file revision feature (keeping the same link)  
+v0.1   first-release

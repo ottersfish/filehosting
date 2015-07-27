@@ -56,20 +56,11 @@ class KeyDao extends Key{
 		}
 	}
 
-	public function deleteKey($key){
-		$file = $this->where('key', $key)->get()->first();
-		$targetDir = $file->id_user.'/'.$file->folder_key.'/'.$key;
-		$this->deleteFilesAndFolder($targetDir);
-		LogDao::logDelete($this->table, $key);
-		$file->delete();
-	}
-
 	public function deleteFilesAndFolder($path){
 		$dir = storage_path('files/'.$path);
 		if(file_exists($dir)){
 			$it = new RecursiveDirectoryIterator($dir, RecursiveDirectoryIterator::SKIP_DOTS);
 			$files = new RecursiveIteratorIterator($it, RecursiveIteratorIterator::CHILD_FIRST);
-
 			foreach($files as $file) {
 			    if ($file->isDir()){
 					rmdir($file->getRealPath());
@@ -80,7 +71,14 @@ class KeyDao extends Key{
 			}
 			rmdir($dir);
 		}
+	}
 
+	public function deleteKey($key){
+		$file = $this->where('key', $key)->get()->first();
+		$targetDir = $file->id_user.'/'.$file->folder_key.'/'.$key;
+		$this->deleteFilesAndFolder($targetDir);
+		LogDao::logDelete($this->table, $key);
+		$file->delete();
 	}
 
 	public function fileExists($key){
@@ -92,7 +90,13 @@ class KeyDao extends Key{
 					->join('folders', 'keys.folder_key', '=', 'folders.key')
 					->where('is_active', true)
 					->where('id_user', $owner)
-					->select(array('folders.folder_name', 'keys.folder_key', 'keys.key', 'files.origFilename', 'extension', 'files.filename'))
+					->select(array('folders.folder_name', 
+									'keys.folder_key', 
+									'keys.key', 
+									'extension', 
+									'keys.id_user',
+									'files.origFilename', 
+									'files.filename'))
 					->get();
 	}
 
@@ -100,8 +104,16 @@ class KeyDao extends Key{
 		if($paginate){
 			return $this->join('files', 'keys.key', '=', 'files.key')
 					->join('users', 'users.id', '=', 'keys.id_user')
+					->join('folders', 'keys.folder_key', '=', 'folders.key')
 					->where('is_active', true)
-					->select('*')
+					->select(array('folders.folder_name', 
+									'keys.folder_key', 
+									'keys.key', 
+									'extension', 
+									'keys.id_user',
+									'files.origFilename', 
+									'files.filename',
+									'users.username'))
 					->paginate($num);
 		}
 		else{
@@ -159,8 +171,6 @@ class KeyDao extends Key{
 
 	public function deleteKeysinFolder($folder_key){
 		$query = $this->where('folder_key', $folder_key);
-		// echo $query->toSql();
-		// var_dump($query->get());
 		$old_values = '';
 		$rows = $query->get();
 		$first = 1;

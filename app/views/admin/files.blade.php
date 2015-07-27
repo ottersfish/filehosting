@@ -1,4 +1,4 @@
-@extends('master')
+	@extends('master')
 
 @section('content')
 	@if(Session::has('message'))
@@ -22,6 +22,7 @@
 							<thead>
 								<tr>
 									<td>#</td>
+									<td>Folder Name</td>
 									<td>File Name</td>
 									<td>Extension</td>
 									<td>Link</td>
@@ -39,12 +40,13 @@
 							?>
 								@foreach($files as $file)
 								<?php
-									$targetdir=storage_path('files/'.$file->id_user.'/'.$file->folder_key.'/'.$file->key);
+									$targetdir = storage_path('files/'.$file->id_user.'/'.$file->folder_key.'/'.$file->key);
 									$filename = $file->origFilename.'.'.$file->extension;
 									$filesize = Helpers::formatFileSize(filesize($targetdir.'/'.$filename));
 								?>
 									<tr>
 										<td>{{ $rownum++ }}</td>
+										<td>{{ $file->folder_name }}</td>
 										<td>{{ $file->filename }}</td>
 										<td>{{ '.'.$file->extension }}</td>
 										<td><a href="{{ url('home/download/'.$file->key) }}" >{{ url('home/download/'.$file->key) }}</a></td>

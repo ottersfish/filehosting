@@ -100,8 +100,7 @@ class HomeController extends BaseController {
 
 	public function getFiles(){
 		return View::make('home.files')
-				->with('files', $this->keyDao->getFiles(Auth::user()->id))
-				->with('folders', $this->folderDao->getFolderList(Auth::user()->id));
+				->with('files', $this->keyDao->getFiles(Auth::user()->id));
 	}
 
 	public function getDownload($key){
@@ -273,17 +272,19 @@ class HomeController extends BaseController {
 		$rules = array(
 			'folder_name' 	=> 'alphanum'
 		);
-		$foldername_validation_result = Validator::make(Input::all(), $rules, $messages);
+		$foldername_validation_result = Validator::make(Input::all(), $rules, $messages);	
 		
 		if($foldername_validation_result->fails()){
 			return Redirect::back()->withInput()->withErrors($foldername_validation_result);
 		}
 
 		if($this->folderDao->exists($folderData['parent'])){
-			if(Auth::user()->ownsFolder($folderData['parent'])){
-				$folderData['folder_name'] = $this->folderDao->getFolderName($folderData['parent']).$folderData['folder_name'].'/';
+			if(Auth::user()->ownsFolder($folderData['parent'])){	
+				$folderData['new_folder_name'] = $this->folderDao->getFolderName($folderData['parent']).$folderData['folder_name'].'/';
 				$validation_result = $this->folderDao->validate($folderData);
 				if(!$validation_result->fails()){
+					$folderData['folder_name'] = $folderData['new_folder_name'];
+					unset($folderData['new_folder_name']);
 					if($this->folderDao->createFolder($folderData)){
 						return Redirect::to('home/files')
 							->with('folderMessage', 'Successfully created a folder.');
@@ -319,6 +320,7 @@ class HomeController extends BaseController {
 		$folder_key = $this->folderDao->getKeyByName($folder_name, Auth::user()->id);
 		return View::make('home.folders')
 			->with('folder_name', $folder_name)
+			->with('parents', $this->folderDao->getFolderList(Auth::user()->id))
 			->with('folders', $this->folderDao->getFolderByParent($folder_key))
 			->with('files', $this->keyDao->getFilesByFolderandOwner($folder_key, Auth::user()->id));
 	}

@@ -70,9 +70,11 @@ class UserDao extends User
 	}
 
 	public function deleteUserById($id){
-		$rowDeleted = $this->where('id', $id)->get()->first();
+		$query = $this->where('id', $id);
+		$rowDeleted = $query->get()->first();
 		LogDao::logDelete($this->table, $rowDeleted->email.', '.$rowDeleted->username);
-		$this->where('id', '=', $id)->delete();
+		$query->delete();
+		return $rowDeleted->username;
 	}
 
 	public function userExists($id){

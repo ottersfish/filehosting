@@ -40,7 +40,7 @@
 	 						@if(Auth::check())
 	 							<?php if(Auth::user()->is_admin)$prefix='admin/';else $prefix='home/';?>
 								<li><a href="{{ url('/') }}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-								<li><a href="{{ url('/home/folders') }}"><span class="glyphicon glyphicon-folder-open"></span> Folders</a></li>
+								<li><a href="{{ url($prefix.'folders') }}"><span class="glyphicon glyphicon-folder-open"></span> Folders</a></li>
 								<li><a href="{{ url($prefix.'files') }}"><span class="glyphicon glyphicon-file"></span> Files</a></li>
 								@if(Auth::user()->is_admin)
 									<li><a href="{{ url('admin/users') }}"><span class="glyphicon glyphicon-user"></span> Users</a></li>

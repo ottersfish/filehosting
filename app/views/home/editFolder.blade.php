@@ -45,7 +45,18 @@
 					Are you sure want to delete folder <strong>'{{ $folder->folder_name }}' ?</strong>.
 				</div>
 			</div>
-			{{ Form::submit("Delete", array("class"=>"btn btn-danger")) }}
+			<div class="row" style="margin-top:-10px">
+				<div class="col-md-6 col-xs-6">
+					<div class="alert alert-warning">
+						Warning: all folders and files will be deleted to!
+					</div>
+				</div>
+			</div>
+			<div class="row" style="margin-top:10px">
+				<div class="col-md-6 col-xs-6"> 
+					{{ Form::submit("Delete", array("class"=>"btn btn-danger")) }}
+				</div>
+			</div>
 		{{ Form::close() }}
 	@endif
 @stop

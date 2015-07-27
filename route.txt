@@ -20,11 +20,14 @@ Warning: PHP Startup: Unable to load dynamic library 'C:\xampp\php\ext\php_oci8.
 |        | GET|HEAD home/files                                                   |               | HomeController@getFiles           | auth           |               |
 |        | GET|HEAD home/folders/{folder_name?}                                  |               | HomeController@getFolders         | auth           |               |
 |        | GET|HEAD home/edit/{key}/{method}                                     |               | HomeController@edit               | auth           |               |
+|        | PUT home/editFolder/{key}                                             |               | HomeController@putEditFolder      | auth           |               |
 |        | GET|HEAD home/edit/{key}/setactive/{id}                               |               | HomeController@setActive          | auth           |               |
+|        | GET|HEAD home/edit-folder/{key}/{method}                              |               | HomeController@getEditFolder      | auth           |               |
+|        | PUT home/edit-folder/{key}                                            |               | HomeController@putRenameFolder    | auth           |               |
+|        | DELETE home/edit-folder/{key}                                         |               | HomeController@deleteEditFolder   | auth           |               |
 |        | POST home/edit/{key}/revision                                         |               | HomeController@doRevision         | auth           |               |
 |        | POST home/addfolder                                                   |               | HomeController@postAddFolder      | auth           |               |
 |        | PUT home/edit/{key}                                                   |               | HomeController@putEdit            | auth           |               |
-|        | PUT home/editFolder/{key}                                             |               | HomeController@putEditFolder      | auth           |               |
 |        | DELETE home/edit/{key}                                                |               | HomeController@deleteEdit         | auth           |               |
 |        | GET|HEAD login/password/remind/{one?}/{two?}/{three?}/{four?}/{five?} |               | RemindersController@getRemind     |                |               |
 |        | POST login/password/remind/{one?}/{two?}/{three?}/{four?}/{five?}     |               | RemindersController@postRemind    |                |               |
@@ -50,7 +53,8 @@ Warning: PHP Startup: Unable to load dynamic library 'C:\xampp\php\ext\php_oci8.
 |        | POST home/add-folder/{one?}/{two?}/{three?}/{four?}/{five?}           |               | HomeController@postAddFolder      |                |               |
 |        | GET|HEAD home/folders/{one?}/{two?}/{three?}/{four?}/{five?}          |               | HomeController@getFolders         |                |               |
 |        | GET|HEAD home/edit-folder/{one?}/{two?}/{three?}/{four?}/{five?}      |               | HomeController@getEditFolder      |                |               |
-|        | GET|HEAD home/editfolders/{one?}/{two?}/{three?}/{four?}/{five?}      |               | HomeController@getEditfolders     |                |               |
+|        | PUT home/rename-folder/{one?}/{two?}/{three?}/{four?}/{five?}         |               | HomeController@putRenameFolder    |                |               |
+|        | DELETE home/edit-folder/{one?}/{two?}/{three?}/{four?}/{five?}        |               | HomeController@deleteEditFolder   |                |               |
 |        | GET|HEAD|POST|PUT|PATCH|DELETE home/{_missing}                        |               | HomeController@missingMethod      |                |               |
 |        | GET|HEAD login/index/{one?}/{two?}/{three?}/{four?}/{five?}           |               | LoginController@getIndex          |                |               |
 |        | GET|HEAD login                                                        |               | LoginController@getIndex          |                |               |

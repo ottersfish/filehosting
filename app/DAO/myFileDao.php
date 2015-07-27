@@ -144,8 +144,6 @@ class myFileDao extends myFile{
 							->whereRaw('files.key = keys.key')
 							->where('keys.folder_key', '=', $folder_key);
 					});
-		// echo $query->toSql(); return;
-		// var_dump($query->get());return;
 		$rows = $query->get();
 		$old_values = "";
 		$first = 1;

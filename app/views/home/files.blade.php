@@ -10,35 +10,6 @@
 		</div>
 	</div>
 	@endif
-	<div class="row">
-		<div class="col-md-6 col-xs-6">
-			<div class="panel panel-info" >
-				<div class="panel-heading">
-					<p class="panel-title">
-						Add Folder
-					</p>
-				</div>
-				@if($errors->has())
-					@foreach($errors->all() as $error)
-						<div class="alert alert-danger">{{ $error }}</div>
-					@endforeach
-				@endif
-				<div style="padding-top:30px" class="panel-body">
-					{{Form::open(array('url' =>'home/addfolder'))}}
-						<div class="row form-group">
-							<label for="parent_folder" class="col-md-3 control-label">Parent Folder</label>
-							{{ Form::select('parent', $folders, null, ['class' => 'col-md-8']) }}
-						</div>
-						<div class="row form-group">
-							<label for="folder_name" class="col-md-3 control-label">Folder Name:</label>
-							{{ Form::text('folder_name', null, ['class' => 'col-md-8']) }}
-						</div>
-						{{ Form::submit("Add", array('class' => 'btn btn-success btn-sm', 'type' => 'submit')) }}
-					{{ Form::close() }}
-				</div>
-			</div>
-		</div>
-	</div>
 	@if(Session::has('message'))
 	<div class="row">
 		<div class="col-md-6 col-xs-12">
