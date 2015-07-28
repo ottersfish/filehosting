@@ -1,15 +1,6 @@
 @extends('master')
 
 @section('content')
-	@if(Session::has('folderMessage'))
-	<div class="row">
-		<div class="col-md-6 col-xs-12">
-			<p class="alert alert-success">
-				{{ Session::get('folderMessage') }}
-			</p>
-		</div>
-	</div>
-	@endif
 	@if(Session::has('message'))
 	<div class="row">
 		<div class="col-md-6 col-xs-12">

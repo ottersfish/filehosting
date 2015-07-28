@@ -11,3 +11,8 @@
 |
 */
 
+$folderDao = new FolderDao;
+$fileDao = new myFileDao;
+$keyDao = new KeyDao;
+Artisan::add(new initiateCommand($folderDao));
+Artisan::add(new deleteGuestFilesCommand($keyDao, $fileDao));

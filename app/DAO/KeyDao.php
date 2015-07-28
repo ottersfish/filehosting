@@ -1,19 +1,6 @@
 <?php
 class KeyDao extends Key{
 
-	public function validate($file){
-		if(Auth::check()){
-			$max_file_size=10000;
-		}
-		else{
-			$max_file_size=1000;
-		}
-		$rules=array(
-			'file' => 'required|max:'.$max_file_size
-		);
-		return Validator::make($file, $rules);
-	}
-
 	private function checkKey($key){
 		return is_null($this->whereKey($key)->first());
 	}
@@ -30,29 +17,6 @@ class KeyDao extends Key{
 			if($this->checkKey($randomString)){
 				return $randomString;
 			}
-		}
-	}
-
-	public function saveKey($file, Key $item){
-		$item->path = '/';
-		$item->folder_key = $file['folder'];
-		$item->key = $this->genKey();
-		if(Auth::check()){
-			$item->id_user=Auth::user()->id;
-		}
-		else{
-			$item->id_user=2;
-		}
-		LogDao::logCreate($this->table, 'path, key, id_user', $item->key);
-		return $item->save();
-	}
-
-	public function getKeys($id = 0){
-		if($id){
-			return $this->where('id_user',$id)->get();
-		}
-		else{
-			return $this->all();
 		}
 	}
 
@@ -73,12 +37,68 @@ class KeyDao extends Key{
 		}
 	}
 
+	public function deleteFilesByOwnership($id){
+		$query = $this->where('id_user','=',$id);
+		$rows = $query->get();
+		if(!$rows->isEmpty()){
+			$first = 1;
+			$old_values = '';
+			foreach($rows as $row){
+				if(!$first){
+					$old_values .= ', ';
+				}
+				$old_values .= $row->key;
+				$first = 0;
+			}
+			LogDao::logDelete($this->table, $old_values);
+			$query->delete();
+		}
+	}
+
+	public function deleteGuestFiles(){
+		$id = 2;
+		$query = $this->where('id_user', $id)
+					->whereRaw('created_at < date_sub(now(), interval 1 day)');
+		$rows = $query->get();
+		if(!$rows->isEmpty()){
+			$old_values = '';
+			$first = 1;
+			foreach ($rows as $row){
+				if(!$first){
+					$old_values = ', ';
+				}
+				$old_values .= $row->key;
+				$first = 0;
+				$targetDir = $row->id_user.'/'.$row->folder_key.'/'.$row->key;
+				$this->deleteFilesAndFolder($targetDir);
+			}
+			$query->delete();
+			LogDao::logDelete($this->table, $old_values);
+		}
+	}
+
 	public function deleteKey($key){
 		$file = $this->where('key', $key)->get()->first();
 		$targetDir = $file->id_user.'/'.$file->folder_key.'/'.$key;
 		$this->deleteFilesAndFolder($targetDir);
 		LogDao::logDelete($this->table, $key);
 		$file->delete();
+	}
+
+	public function deleteKeysinFolder($folder_key){
+		$query = $this->where('folder_key', $folder_key);
+		$old_values = '';
+		$rows = $query->get();
+		$first = 1;
+		foreach($rows as $row){
+			if(!$first){
+				$old_values .= ', ';
+			}
+			$old_values .= $row->key;
+			$first = 0;
+		}
+		LogDao::logDelete($this->table, $old_values);
+		return $query->delete();
 	}
 
 	public function fileExists($key){
@@ -125,28 +145,6 @@ class KeyDao extends Key{
 		}
 	}
 
-	public function deleteFilesByOwnership($id){
-		$query = $this->where('id_user','=',$id);
-		$rows = $query->get();
-		if(!$rows->isEmpty()){
-			$first = 1;
-			$old_values = '';
-			foreach($rows as $row){
-				if(!$first){
-					$old_values .= ', ';
-				}
-				$old_values .= $row->key;
-				$first = 0;
-			}
-			LogDao::logDelete($this->table, $old_values);
-			$query->delete();
-		}
-	}
-
-	public function getByKey($key){
-		return $this->where('key', $key)->get()->first();
-	}
-
 	public function getFilesByFolderandOwner($folder_key, $owner){
 		return $this->join('files', 'keys.key', '=', 'files.key')
 					->where('is_active', true)
@@ -154,6 +152,23 @@ class KeyDao extends Key{
 					->where('folder_key', $folder_key)
 					->select(array('keys.folder_key', 'keys.key', 'files.origFilename', 'extension', 'files.filename'))
 					->get();
+	}
+
+	public function getFolderKeyByKey($key){
+		return $this->where('key', $key)->pluck('folder_key');
+	}
+
+	public function getKeys($id = 0){
+		if($id){
+			return $this->where('id_user',$id)->get();
+		}
+		else{
+			return $this->all();
+		}
+	}
+
+	public function getByKey($key){
+		return $this->where('key', $key)->get()->first();
 	}
 
 	public function moveFile($key){
@@ -165,24 +180,31 @@ class KeyDao extends Key{
 		$query->update(array('folder_key' => Input::get('folder')));
 	}
 
-	public function getFolderKeyByKey($key){
-		return $this->where('key', $key)->pluck('folder_key');
+	public function saveKey($file, Key $item){
+		$item->path = '/';
+		$item->folder_key = $file['folder'];
+		$item->key = $this->genKey();
+		if(Auth::check()){
+			$item->id_user=Auth::user()->id;
+		}
+		else{
+			$item->id_user=2;
+		}
+		LogDao::logCreate($this->table, 'folder_key, key, id_user', $file['folder'].', '.$item->key.', '.$item->id_user);
+		return $item->save();
 	}
 
-	public function deleteKeysinFolder($folder_key){
-		$query = $this->where('folder_key', $folder_key);
-		$old_values = '';
-		$rows = $query->get();
-		$first = 1;
-		foreach($rows as $row){
-			if(!$first){
-				$old_values .= ', ';
-			}
-			$old_values .= $row->key;
-			$first = 0;
+	public function validate($file){
+		if(Auth::check()){
+			$max_file_size=10000;
 		}
-		LogDao::logDelete($this->table, $old_values);
-		return $query->delete();
+		else{
+			$max_file_size=1000;
+		}
+		$rules=array(
+			'file' => 'required|max:'.$max_file_size
+		);
+		return Validator::make($file, $rules);
 	}
 }
 ?>

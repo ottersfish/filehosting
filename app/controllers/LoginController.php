@@ -3,13 +3,25 @@
 class LoginController extends BaseController {
 
 	protected $userDao, $folderDao;
+	
 	public function __construct(UserDao $userDao, FolderDao $folderDao){
 		$this->userDao = $userDao;
 		$this->folderDao = $folderDao;
 	}
 
+	public function getLogout(){
+		Auth::logout();
+
+		return Redirect::to('/');
+	}
+
 	public function getIndex(){
 		return View::make('login.index');
+	}
+
+
+	public function getRegister(){
+		return View::make('login.register');
 	}
 
 	public function postIndex(){
@@ -31,17 +43,6 @@ class LoginController extends BaseController {
 				->withInput()
 				->withErrors($validation_result);
 		}
-	}
-
-	public function getLogout(){
-		Auth::logout();
-
-		return Redirect::to('/');
-	}
-
-
-	public function getRegister(){
-		return View::make('login.register');
 	}
 
 	public function postRegister(){

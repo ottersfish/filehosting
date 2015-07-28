@@ -23,7 +23,15 @@ Now is written using Laravel 4 Framework.
   php artisan serve
   ```
   or using your own php server (e.g. xampp)
-7. Then it should running a simple website which provide file hosting service.
+7. Run this following command to generate autoload file for DAO classes.  
+  ```
+  composer dump-autoload
+  ```
+8. To intialize admin and guest folder you need to run this command  
+  ```
+  php artisan server:initiate
+  ```
+9. Then it should running a simple website which provide file hosting service.  
 
 ## Features
 1. Admin section which manage users and files.
@@ -31,6 +39,10 @@ Now is written using Laravel 4 Framework.
 3. Registered user can do upload and look at the list of their files.
 4. The user can edit his files currently only editing the file name.
 5. Downloading the file simply using a link.
+6. Admin can delete guest's files which has been uploaded for a day using this command:  
+  ```
+  php artisan server:deleteGuestFiles
+  ```
 
 ## To be added
 1. File revision system (added)
@@ -40,6 +52,7 @@ Now is written using Laravel 4 Framework.
 If you found any bugs please feel free to contact me at fendy.fendy95@gmail.com
 
 ## Changelog
+v0.3.1 Added artisan features for initialize server and delete old guest files.
 v0.3   file-folder system added
 v0.2.2 Logging added for create, update, delete database operation.  
 v0.2.1 File revision improvements - able to set the active file, from previous uploaded files.  
