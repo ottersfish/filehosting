@@ -58,7 +58,7 @@
 					</div>
 				<!-- </div> -->
 			</div>
-					{{ $logs->links() }}
+					@if(method_exists($logs, 'links')){{ $logs->links() }}@endif
 		</div>
 	</div>
 @stop
