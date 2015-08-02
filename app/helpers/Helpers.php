@@ -15,6 +15,14 @@ class Helpers{
 		$bytes /= (1 << (10 * $pow)); 
 		return round($bytes, $precision) . ' ' . $units[$pow];
 	}
+
+    public static function moveFile($file, $fileKey, $fileHist){
+        $main_dir = storage_path('files/');
+        $target_dir = $main_dir.$fileKey->id_user.'/'.$file['folder'].'/'.$fileKey->key;
+        if(!file_exists($target_dir))mkdir($target_dir);
+        $file['file']->move($target_dir, $fileHist->origFilename.'.'.$fileHist->extension);
+    }
+
 }
 
 ?>

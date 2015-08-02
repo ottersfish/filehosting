@@ -14,7 +14,7 @@
 				@endforeach
 			@endif
 			<div style="padding-top:30px" class="panel-body">
-				{{ Form::open(array('id' => 'register_form', 'class' => 'form-horizontal')) }}
+				{{ Form::open(array('id' => 'register_form', 'class' => 'form-horizontal', 'url' => route('users.store'))) }}
 					<div class="row form-group">
 						<label for="email" class="col-md-3 control-label">Your Email:</label>
 						<div class="col-md-4">

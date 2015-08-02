@@ -37,15 +37,12 @@
 					</div>
 	 				<div id="navbar" class="navbar-collapse collapse">
 	 					<ul class="nav navbar-nav">
-	 						@if(Auth::check())
-	 							<?php if(Auth::user()->is_admin)$prefix='admin/';else $prefix='home/';?>
-								<li><a href="{{ url('/') }}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
-								<li><a href="{{ url($prefix.'folders') }}"><span class="glyphicon glyphicon-folder-open"></span> Folders</a></li>
-								<li><a href="{{ url($prefix.'files') }}"><span class="glyphicon glyphicon-file"></span> Files</a></li>
-								@if(Auth::user()->is_admin)
-									<li><a href="{{ url('admin/users') }}"><span class="glyphicon glyphicon-user"></span> Users</a></li>
-									<li><a href="{{ url('admin/logs') }}"><span class="glyphicon glyphicon-list"></span> Logs</a></li>
-								@endif
+		 					@if(Auth::check())
+		 						@section('navbar')
+									<li><a href="{{ url('/') }}"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+									<li><a href="{{ route('folders.show') }}"><span class="glyphicon glyphicon-folder-open"></span> Folders</a></li>
+									<li><a href="{{ route('files.index') }}"><span class="glyphicon glyphicon-file"></span> Files</a></li>
+								@show
 							@else
 								<li><a href="{{url()}}"><span class="glyphicon glyphicon-arrow-up"></span> Upload</a></li>
 							@endif
@@ -55,13 +52,13 @@
 		 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Welcome back, @if(!Auth::check()) {{'Guest'}}@else {{Auth::user()->username}}@endif! <span class="caret"></span></a>
 		 						<ul class="dropdown-menu">
 		 							@if(Auth::check())
-		 								<li><a href="{{url('home/profile')}}">Profile</a></li>
+		 								<li><a href="{{ route('users.edit') }}">Profile</a></li>
 		 								<li class="divider"></li>
-										<li><a href="{{url('login/logout')}}">Logout </a></li>
+										<li><a href="{{ route('users.logout') }}">Logout </a></li>
 									@else
-										<li><a href="{{url('login/register')}}">Register </a></li>
+										<li><a href="{{ route('users.register') }}">Register </a></li>
 										<li class="divider"></li>
-										<li><a href="{{url('login')}}">Login </a></li>
+										<li><a href="{{ route('users.login') }}">Login </a></li>
 									@endif
 		 						</ul>
 		 					</li>
@@ -94,9 +91,6 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 		<!-- Include all compiled plugins (below), or include individual files as needed -->
 		<script src="{{ asset('bootstrap/js/bootstrap.min.js') }}"></script>
-		<!-- DataTables JavaScript -->
-		<!-- // <script src="{{ asset('bootstrap/js/plugins/dataTables/jquery.dataTables.js') }}"></script> -->
-		<!-- // <script src="{{ asset('bootstrap/js/plugins/dataTables/dataTables.bootstrap.js') }}"></script> -->
 
 		@yield('scripts')
 	</body>

@@ -1,54 +1,54 @@
 <?php
 
 class ExampleTest extends TestCase {
-	/**
-	 * A basic functional test example.
-	 *
-	 * @return void
-	 */
+    /**
+     * A basic functional test example.
+     *
+     * @return void
+     */
 
-	public function setUp(){
-		parent::setUp();
+    public function setUp(){
+        parent::setUp();
 
-		Session::start();
+        Session::start();
 
-		Route::enableFilters();
-	}
+        Route::enableFilters();
+    }
 
-	public function testRootFolder()
-	{
-		$crawler = $this->call('GET', '/');
-		// $this->get('/');
+    public function testRootFolder()
+    {
+        $crawler = $this->call('GET', '/');
+        // $this->get('/');
 
-		$this->assertRedirectedTo('/home');
-	}
+        $this->assertRedirectedTo('/home');
+    }
 
-	public function testHomeGetIndex(){
-		$crawler = $this->client->request('GET', 'home');
+    public function testHomeGetIndex(){
+        $crawler = $this->client->request('GET', 'home');
 
-		$this->assertTrue($this->client->getResponse()->isOk());
-	}
+        $this->assertTrue($this->client->getResponse()->isOk());
+    }
 
-	public function testLoginSuccess(){
-		$credentials = array('username' => 'admin',
-							 'password' => 'admin');
+    public function testLoginSuccess(){
+        $credentials = array('username' => 'admin',
+                             'password' => 'admin');
 
-		$response = $this->action('POST', 'LoginController@postIndex', null, $credentials);
+        $response = $this->action('POST', 'LoginController@postIndex', null, $credentials);
 
-		$this->assertRedirectedTo('/');
+        $this->assertRedirectedTo('/');
 
-		// $this->assertTrue($this->client->getRepsonse()->isOk());
-	}
+        // $this->assertTrue($this->client->getRepsonse()->isOk());
+    }
 
-	public function testLoginFailed(){
-		$credentials = array('username' => 'admin',
-							 'password' => '');
+    public function testLoginFailed(){
+        $credentials = array('username' => 'admin',
+                             'password' => '');
 
-		$response = $this->action('POST', 'LoginController@postIndex', null, $credentials, [], ['HTTP_REFERER' => url('login')]);
+        $response = $this->action('POST', 'LoginController@postIndex', null, $credentials, [], ['HTTP_REFERER' => url('login')]);
 
-		$this->assertRedirectedTo('login');
+        $this->assertRedirectedTo('login');
 
-		$this->assertSessionHasErrors(['password']);
-	}
+        $this->assertSessionHasErrors(['password']);
+    }
 
 }

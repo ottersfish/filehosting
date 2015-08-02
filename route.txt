@@ -1,69 +1,49 @@
 
 Warning: PHP Startup: Unable to load dynamic library 'C:\xampp\php\ext\php_oci8.dll' - The specified module could not be found.
  in Unknown on line 0
-+--------+-----------------------------------------------------------------------+---------------+-----------------------------------+----------------+---------------+
-| Domain | URI                                                                   | Name          | Action                            | Before Filters | After Filters |
-+--------+-----------------------------------------------------------------------+---------------+-----------------------------------+----------------+---------------+
-|        | GET|HEAD /                                                            |               | Closure                           |                |               |
-|        | GET|HEAD admin/files/{id}                                             |               | AdminController@files             | auth           |               |
-|        | GET|HEAD admin/users/{id}/delete                                      |               | AdminController@delete            | auth           |               |
-|        | GET|HEAD admin                                                        | admin.index   | AdminController@index             | auth           |               |
-|        | GET|HEAD admin/create                                                 | admin.create  | AdminController@create            | auth           |               |
-|        | POST admin                                                            | admin.store   | AdminController@store             | auth           |               |
-|        | GET|HEAD admin/{admin}                                                | admin.show    | AdminController@show              | auth           |               |
-|        | GET|HEAD admin/{admin}/edit                                           | admin.edit    | AdminController@edit              | auth           |               |
-|        | PUT admin/{admin}                                                     | admin.update  | AdminController@update            | auth           |               |
-|        | PATCH admin/{admin}                                                   |               | AdminController@update            | auth           |               |
-|        | DELETE admin/{admin}                                                  | admin.destroy | AdminController@destroy           | auth           |               |
-|        | GET|HEAD home/profile                                                 |               | HomeController@getProfile         | auth           |               |
-|        | PUT home/profile                                                      |               | HomeController@putProfile         | auth           |               |
-|        | GET|HEAD home/files                                                   |               | HomeController@getFiles           | auth           |               |
-|        | GET|HEAD home/folders/{folder_name?}                                  |               | HomeController@getFolders         | auth           |               |
-|        | GET|HEAD home/edit/{key}/{method}                                     |               | HomeController@edit               | auth           |               |
-|        | PUT home/editFolder/{key}                                             |               | HomeController@putEditFolder      | auth           |               |
-|        | GET|HEAD home/edit/{key}/setactive/{id}                               |               | HomeController@setActive          | auth           |               |
-|        | GET|HEAD home/edit-folder/{key}/{method}                              |               | HomeController@getEditFolder      | auth           |               |
-|        | PUT home/edit-folder/{key}                                            |               | HomeController@putRenameFolder    | auth           |               |
-|        | DELETE home/edit-folder/{key}                                         |               | HomeController@deleteEditFolder   | auth           |               |
-|        | POST home/edit/{key}/revision                                         |               | HomeController@doRevision         | auth           |               |
-|        | POST home/addfolder                                                   |               | HomeController@postAddFolder      | auth           |               |
-|        | PUT home/edit/{key}                                                   |               | HomeController@putEdit            | auth           |               |
-|        | DELETE home/edit/{key}                                                |               | HomeController@deleteEdit         | auth           |               |
-|        | GET|HEAD login/password/remind/{one?}/{two?}/{three?}/{four?}/{five?} |               | RemindersController@getRemind     |                |               |
-|        | POST login/password/remind/{one?}/{two?}/{three?}/{four?}/{five?}     |               | RemindersController@postRemind    |                |               |
-|        | GET|HEAD login/password/reset/{one?}/{two?}/{three?}/{four?}/{five?}  |               | RemindersController@getReset      |                |               |
-|        | POST login/password/reset/{one?}/{two?}/{three?}/{four?}/{five?}      |               | RemindersController@postReset     |                |               |
-|        | GET|HEAD|POST|PUT|PATCH|DELETE login/password/{_missing}              |               | RemindersController@missingMethod |                |               |
-|        | GET|HEAD notfound                                                     |               | Closure                           |                |               |
-|        | GET|HEAD unauthorized                                                 |               | Closure                           |                |               |
-|        | GET|HEAD home/do_download/{key}                                       |               | HomeController@doDownload         |                |               |
-|        | GET|HEAD home/success/{key}                                           |               | HomeController@getSuccess         |                |               |
-|        | DELETE home/edit/{one?}/{two?}/{three?}/{four?}/{five?}               |               | HomeController@deleteEdit         |                |               |
-|        | DELETE home/edit-folder/{one?}/{two?}/{three?}/{four?}/{five?}        |               | HomeController@deleteEditFolder   |                |               |
-|        | GET|HEAD home/download/{one?}/{two?}/{three?}/{four?}/{five?}         |               | HomeController@getDownload        |                |               |
-|        | GET|HEAD home/files/{one?}/{two?}/{three?}/{four?}/{five?}            |               | HomeController@getFiles           |                |               |
-|        | GET|HEAD home/index/{one?}/{two?}/{three?}/{four?}/{five?}            |               | HomeController@getIndex           |                |               |
-|        | GET|HEAD home                                                         |               | HomeController@getIndex           |                |               |
-|        | GET|HEAD home/profile/{one?}/{two?}/{three?}/{four?}/{five?}          |               | HomeController@getProfile         |                |               |
-|        | GET|HEAD home/success/{one?}/{two?}/{three?}/{four?}/{five?}          |               | HomeController@getSuccess         |                |               |
-|        | GET|HEAD home/folders/{one?}/{two?}/{three?}/{four?}/{five?}          |               | HomeController@getFolders         |                |               |
-|        | GET|HEAD home/edit-folder/{one?}/{two?}/{three?}/{four?}/{five?}      |               | HomeController@getEditFolder      |                |               |
-|        | POST home/add-folder/{one?}/{two?}/{three?}/{four?}/{five?}           |               | HomeController@postAddFolder      |                |               |
-|        | POST home/index/{one?}/{two?}/{three?}/{four?}/{five?}                |               | HomeController@postIndex          |                |               |
-|        | POST home                                                             |               | HomeController@postIndex          |                |               |
-|        | PUT home/edit/{one?}/{two?}/{three?}/{four?}/{five?}                  |               | HomeController@putEdit            |                |               |
-|        | PUT home/edit-folder/{one?}/{two?}/{three?}/{four?}/{five?}           |               | HomeController@putEditFolder      |                |               |
-|        | PUT home/rename-folder/{one?}/{two?}/{three?}/{four?}/{five?}         |               | HomeController@putRenameFolder    |                |               |
-|        | PUT home/profile/{one?}/{two?}/{three?}/{four?}/{five?}               |               | HomeController@putProfile         |                |               |
-|        | GET|HEAD|POST|PUT|PATCH|DELETE home/{_missing}                        |               | HomeController@missingMethod      |                |               |
-|        | GET|HEAD login/logout/{one?}/{two?}/{three?}/{four?}/{five?}          |               | LoginController@getLogout         |                |               |
-|        | GET|HEAD login/index/{one?}/{two?}/{three?}/{four?}/{five?}           |               | LoginController@getIndex          |                |               |
-|        | GET|HEAD login                                                        |               | LoginController@getIndex          |                |               |
-|        | GET|HEAD login/register/{one?}/{two?}/{three?}/{four?}/{five?}        |               | LoginController@getRegister       |                |               |
-|        | POST login/index/{one?}/{two?}/{three?}/{four?}/{five?}               |               | LoginController@postIndex         |                |               |
-|        | POST login                                                            |               | LoginController@postIndex         |                |               |
-|        | POST login/register/{one?}/{two?}/{three?}/{four?}/{five?}            |               | LoginController@postRegister      |                |               |
-|        | GET|HEAD|POST|PUT|PATCH|DELETE login/{_missing}                       |               | LoginController@missingMethod     |                |               |
-|        | POST login/{param}                                                    |               | LoginController@test              |                |               |
-|        | GET|HEAD initiate                                                     |               | HomeController@initiate           |                |               |
-+--------+-----------------------------------------------------------------------+---------------+-----------------------------------+----------------+---------------+
++--------+------------------------------------------------------------------------------+----------------------+-----------------------------------+----------------+---------------+
+| Domain | URI                                                                          | Name                 | Action                            | Before Filters | After Filters |
++--------+------------------------------------------------------------------------------+----------------------+-----------------------------------+----------------+---------------+
+|        | GET|HEAD /                                                                   | home                 | Closure                           |                |               |
+|        | GET|HEAD files/upload                                                        | files.create         | FilesController@create            |                |               |
+|        | GET|HEAD files/success/{files}                                               | files.success        | FilesController@success           |                |               |
+|        | GET|HEAD files/download/{files}                                              | files.download       | FilesController@download          |                |               |
+|        | POST files                                                                   | files.store          | FilesController@store             |                |               |
+|        | GET|HEAD files/{files}                                                       | files.show           | FilesController@show              |                |               |
+|        | GET|HEAD users/login                                                         | users.login          | UsersController@login             | guest          |               |
+|        | GET|HEAD users/register                                                      | users.register       | UsersController@create            | guest          |               |
+|        | POST users/do-login                                                          | users.do-login       | UsersController@doLogin           | guest          |               |
+|        | POST users/register                                                          | users.store          | UsersController@store             | guest          |               |
+|        | PUT files/move-folder/{files}                                                | files.move-folder    | FilesController@moveFolder        | auth           |               |
+|        | GET|HEAD files                                                               | files.index          | FilesController@index             | auth           |               |
+|        | GET|HEAD files/{files}/edit                                                  | files.edit           | FilesController@edit              | auth           |               |
+|        | PUT files/{files}                                                            | files.update         | FilesController@update            | auth           |               |
+|        | PATCH files/{files}                                                          |                      | FilesController@update            | auth           |               |
+|        | DELETE files/{files}                                                         | files.destroy        | FilesController@destroy           | auth           |               |
+|        | POST folders                                                                 | folders.store        | FoldersController@store           | auth           |               |
+|        | GET|HEAD folders/{folders}/edit                                              | folders.edit         | FoldersController@edit            | auth           |               |
+|        | DELETE folders/{folders}                                                     | folders.destroy      | FoldersController@destroy         | auth           |               |
+|        | GET|HEAD folders/{folders?}                                                  | folders.show         | FoldersController@show            | auth           |               |
+|        | GET|HEAD revisions/set-active/{key}/{id}                                     | revisions.set-active | RevisionsController@setActive     | auth           |               |
+|        | GET|HEAD revisions/{revisions}                                               | revisions.show       | RevisionsController@show          | auth           |               |
+|        | PUT revisions/{revisions}                                                    | revisions.update     | RevisionsController@update        | auth           |               |
+|        | PATCH revisions/{revisions}                                                  |                      | RevisionsController@update        | auth           |               |
+|        | GET|HEAD users/edit                                                          | users.edit           | UsersController@edit              | auth           |               |
+|        | GET|HEAD users/logout                                                        | users.logout         | UsersController@logout            | auth           |               |
+|        | PUT users/edit                                                               | users.update         | UsersController@update            | auth           |               |
+|        | GET|HEAD admin/files/{id}                                                    |                      | AdminController@files             | auth           |               |
+|        | GET|HEAD admin/users/{id}/delete                                             | admin.users.delete   | UsersAdminController@edit         | auth, isAdmin  |               |
+|        | GET|HEAD admin                                                               | admin.index          | AdminController@index             | auth, isAdmin  |               |
+|        | GET|HEAD admin/files                                                         | admin.files.index    | FilesAdminController@index        | auth, isAdmin  |               |
+|        | GET|HEAD admin/files/{files}                                                 | admin.files.show     | FilesAdminController@show         | auth, isAdmin  |               |
+|        | GET|HEAD admin/folders                                                       | admin.folders.index  | FoldersAdminController@index      | auth, isAdmin  |               |
+|        | GET|HEAD admin/users                                                         | admin.users.index    | UsersAdminController@index        | auth, isAdmin  |               |
+|        | DELETE admin/users/{users}                                                   | admin.users.destroy  | UsersAdminController@destroy      | auth, isAdmin  |               |
+|        | GET|HEAD users/forget-password/remind/{one?}/{two?}/{three?}/{four?}/{five?} |                      | RemindersController@getRemind     |                |               |
+|        | POST users/forget-password/remind/{one?}/{two?}/{three?}/{four?}/{five?}     |                      | RemindersController@postRemind    |                |               |
+|        | GET|HEAD users/forget-password/reset/{one?}/{two?}/{three?}/{four?}/{five?}  |                      | RemindersController@getReset      |                |               |
+|        | POST users/forget-password/reset/{one?}/{two?}/{three?}/{four?}/{five?}      |                      | RemindersController@postReset     |                |               |
+|        | GET|HEAD|POST|PUT|PATCH|DELETE users/forget-password/{_missing}              |                      | RemindersController@missingMethod |                |               |
+|        | GET|HEAD notfound                                                            |                      | Closure                           |                |               |
+|        | GET|HEAD unauthorized                                                        |                      | Closure                           |                |               |
++--------+------------------------------------------------------------------------------+----------------------+-----------------------------------+----------------+---------------+

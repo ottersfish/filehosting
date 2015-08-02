@@ -18,7 +18,7 @@
 			</div>
 			@endif
 			<div style="padding-top:30px" class="panel-body">
-				{{ Form::open(array('id' => 'full_loginform', 'class' => 'form-horizontal', 'url' => 'login')) }}
+				{{ Form::open(array('id' => 'full_loginform', 'class' => 'form-horizontal', 'url' => route('users.do-login'))) }}
 					<div class="input-group">
 						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
 						{{ Form::text('username', null, ['class' => 'form-control', 'placeholder' => 'Username']) }}
@@ -29,10 +29,8 @@
 					</div>
 
 					<div style="margin-top:25px" class="form-group">
-						<!-- Button -->
 						<div class="col-sm-12 controls">
 							{{ Form::button("Login", array("class"=>"btn btn-success",'type' => 'submit')) }}
-							<!--<a id="btn-fblogin" href="#" class="btn btn-primary">Login with Facebook</a>-->
 						</div>
 					</div>
 
@@ -40,10 +38,10 @@
 						<div class="col-md-12 control">
 							<div style="border-top: 1px solid#888; padding-top:15px; font-size:85%" >
 								Forgot your password?
-							<a href="login/password/remind">
+							<a href="{{ url('users/forget-password/remind') }}">
 								Click Here!
 							</a>
-							<span class="pull-right">Doesn't have an account? <a href="{{ url('login/register') }}">Register here!</a></span>
+							<span class="pull-right">Doesn't have an account? <a href="{{ route('users.register') }}">Register here!</a></span>
 							</div>
 						</div>
 					</div>

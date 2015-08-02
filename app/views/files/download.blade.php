@@ -8,7 +8,7 @@
 	</div>
 	<div class="row">
 		<div class="col-md-12 col-xs-12">
-			<a href="{{ url('home/do_download/'.$file->key) }}">
+			<a href="{{ route('files.download', array('key' => $file->key)) }}">
 				<button class="btn btn-primary"><span class="glyphicon glyphicon-download-alt"></span> Download</button>
 			</a>
 		</div>
