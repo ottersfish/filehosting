@@ -29,25 +29,10 @@ class FoldersController extends \BaseController {
             'owner'         => Auth::user()->id
         );
 
-        $messages = array(
-            'alphanum' => ':attribute must contain only number and characters'
-        );
-        $rules = array(
-            'folder_name'     => 'alphanum'
-        );
-        $foldername_validation_result = Validator::make(Input::all(), $rules, $messages);    
-        
-        if($foldername_validation_result->fails()){
-            return Redirect::back()->withInput()->withErrors($foldername_validation_result);
-        }
-
         if($this->folderDao->exists($folderData['parent'])){
-            if(Auth::user()->ownsFolder($folderData['parent'])){    
-                $folderData['new_folder_name'] = $this->folderDao->getFolderName($folderData['parent']).$folderData['folder_name'].'/';
+            if(Auth::user()->ownsFolder($folderData['parent'])){
                 $validation_result = $this->folderDao->validate($folderData);
                 if(!$validation_result->fails()){
-                    $folderData['folder_name'] = $folderData['new_folder_name'];
-                    unset($folderData['new_folder_name']);
                     if($this->folderDao->createFolder($folderData)){
                         return Redirect::route('folders.show')
                             ->with('folderMessage', 'Successfully created a folder.');
@@ -64,7 +49,7 @@ class FoldersController extends \BaseController {
                 }
             }
             else{
-                return Redirect::to('unauthorized');
+                return Response::view('unauthorized');
             }
         }
         else{
@@ -121,6 +106,36 @@ class FoldersController extends \BaseController {
             return Response::view('notfound');
         }
 	}
+
+
+    /**
+     * Update folder name.
+     *
+     * @param  string  $key
+     * @return Response
+     */
+    public function update($key){
+        $new_name = Input::get('folder_name');
+        $folderData['folder_name'] = $new_name;
+        $folderData['parent'] = $this->folderDao->getFolderByKey($key)->parent;
+        $validation_result = $this->folderDao->validate($folderData);
+        if(!$validation_result->fails()){
+            if($this->folderDao->renameFolder($key, $new_name)){
+                return Redirect::back()
+                ->with('message', 'Successfully rename folder');
+            }
+            else{
+                return Redirect::back()
+                ->withErrors('An error occured please try again.');
+            }
+        }
+        else{
+            return Redirect::back()
+                ->withInput()
+                ->withErrors($validation_result);
+        }
+    }
+
 
 	/**
 	 * Delete the specified folder including all it's files.

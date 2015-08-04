@@ -25,7 +25,7 @@
                     @endforeach
                 @endif
                 <div style="padding-top:30px" class="panel-body">
-                    {{Form::open(array('method' => $method, 'url'=>'home/edit-folder/'.$folder->key))}}
+                    {{Form::open(array('method' => $method, 'url'=>route('folders.update', array('key' => $folder->key))))}}
                     <div class="row form-group">
                         {{ Form::label('folder_name', 'You\'re about to edit: '.$folder->folder_name, ['class' => 'col-md-12']) }}
                         {{ Form::label('folder_name', null, ['class' => 'col-md-3'])}}

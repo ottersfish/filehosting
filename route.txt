@@ -22,6 +22,8 @@ Warning: PHP Startup: Unable to load dynamic library 'C:\xampp\php\ext\php_oci8.
 |        | DELETE files/{files}                                                         | files.destroy        | FilesController@destroy           | auth           |               |
 |        | POST folders                                                                 | folders.store        | FoldersController@store           | auth           |               |
 |        | GET|HEAD folders/{folders}/edit                                              | folders.edit         | FoldersController@edit            | auth           |               |
+|        | PUT folders/{folders}                                                        | folders.update       | FoldersController@update          | auth           |               |
+|        | PATCH folders/{folders}                                                      |                      | FoldersController@update          | auth           |               |
 |        | DELETE folders/{folders}                                                     | folders.destroy      | FoldersController@destroy         | auth           |               |
 |        | GET|HEAD folders/{folders?}                                                  | folders.show         | FoldersController@show            | auth           |               |
 |        | GET|HEAD revisions/set-active/{key}/{id}                                     | revisions.set-active | RevisionsController@setActive     | auth           |               |
@@ -39,6 +41,7 @@ Warning: PHP Startup: Unable to load dynamic library 'C:\xampp\php\ext\php_oci8.
 |        | GET|HEAD admin/folders                                                       | admin.folders.index  | FoldersAdminController@index      | auth, isAdmin  |               |
 |        | GET|HEAD admin/users                                                         | admin.users.index    | UsersAdminController@index        | auth, isAdmin  |               |
 |        | DELETE admin/users/{users}                                                   | admin.users.destroy  | UsersAdminController@destroy      | auth, isAdmin  |               |
+|        | GET|HEAD admin/logs                                                          | admin.logs.index     | LogsAdminController@index         | auth, isAdmin  |               |
 |        | GET|HEAD users/forget-password/remind/{one?}/{two?}/{three?}/{four?}/{five?} |                      | RemindersController@getRemind     |                |               |
 |        | POST users/forget-password/remind/{one?}/{two?}/{three?}/{four?}/{five?}     |                      | RemindersController@postRemind    |                |               |
 |        | GET|HEAD users/forget-password/reset/{one?}/{two?}/{three?}/{four?}/{five?}  |                      | RemindersController@getReset      |                |               |

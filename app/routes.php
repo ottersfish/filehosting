@@ -33,7 +33,7 @@ Route::group(array('before' => 'auth'), function(){
 						array('only' => array('index', 'edit', 'destroy', 'update')));
 
 	Route::resource('folders', 'FoldersController',
-						array('only' => array('store', 'destroy', 'edit')));
+						array('only' => array('store', 'destroy', 'edit', 'update')));
 	Route::get('folders/{folders?}', array('as' => 'folders.show', 'uses' => 'FoldersController@show'))
 		->where('folders', '(.*)');
 

@@ -125,14 +125,26 @@ class FolderDao extends Folder{
         return $this->where('key', $key)->get()->count();
     }
 
-    public function validate($folderData){
+    public function validate(&$folderData){
+        $messages = array(
+            'alphanum' => ':attribute must contain only number and characters'
+        );
+        $rules = array(
+            'folder_name'     => 'required|alphanum'
+        );
+        $validation_result = Validator::make(Input::all(), $rules, $messages);    
+        
+        if($validation_result->fails()){
+            return $validation_result;
+        }
+        $folderData['folder_name'] = $this->getFolderName($folderData['parent']).$folderData['folder_name'].'/';
+        
         $messages = array(
             'unique' => 'Your requested :attribute exists.'
         );
 
         $rules = array(
-            'folder_name'     => 'required',
-            'new_folder_name' => 'unique:folders,folder_name,NULL,id,owner,'.Auth::user()->id
+            'folder_name' => 'unique:folders,folder_name,NULL,id,owner,'.Auth::user()->id
         );
 
         $validation_result = Validator::make($folderData, $rules, $messages);
@@ -140,7 +152,6 @@ class FolderDao extends Folder{
             return $validation_result;
         }
 
-        $folderData['folder_name'] = $folderData =['new_folder_name'];
         $rules = array(
             'folder_name'     => 'unique:folders,folder_name,NULL,id,owner,'.Auth::user()->id
         );
