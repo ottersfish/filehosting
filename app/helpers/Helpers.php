@@ -1,5 +1,8 @@
 <?php
-class Helpers{
+
+use Illuminate\Support\Facades\Facade;
+
+class Helpers extends Facade{
 	/**
 	 * Create a string of well-formated file size
 	 * @param  int     file size in Bytes
@@ -14,6 +17,10 @@ class Helpers{
 		$pow = min($pow, count($units) - 1);
 		$bytes /= (1 << (10 * $pow)); 
 		return round($bytes, $precision) . ' ' . $units[$pow];
+	}
+
+	public static function getFileSize($path){
+		return Helpers::formatFileSize(filesize($path));
 	}
 
     public static function moveFile($file, $fileKey, $fileHist){

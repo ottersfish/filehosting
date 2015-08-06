@@ -18,7 +18,7 @@ class CreateFolders extends Migration {
             $table->string('key');
             $table->string('parent');
             $table->string('folder_name');
-            $table->string('owner');
+            $table->integer('owner')->references('id')->on('users');
             $table->timestamps();
         });
     }

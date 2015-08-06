@@ -96,7 +96,7 @@
                                 <?php
                                     $targetdir = storage_path('files/'.Auth::user()->id.'/'.$file->folder_key.'/'.$file->key);
                                     $filename = $file->origFilename.'.'.$file->extension;
-                                    $filesize = Helpers::formatFileSize(filesize($targetdir.'/'.$filename))
+                                    $filesize = Helpers::getFileSize($targetdir.'/'.$filename)
                                 ?>
                                     <tr>
                                     <td>{{ $rownum++ }}</td>

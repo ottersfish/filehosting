@@ -14,11 +14,12 @@
         "classmap": [
             "app/commands",
             "app/controllers",
+            "app/helpers",
             "app/DAO",
-            "app/Helpers",
             "app/models",
             "app/database/migrations",
             "app/database/seeds",
+            "app/providers",
             "app/tests/TestCase.php"
         ]
     },
