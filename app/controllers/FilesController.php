@@ -75,7 +75,6 @@ class FilesController extends \BaseController {
                         $fileHist->key = $fileKey->key;
                         if($this->myFileDao->saveFile($fileData, $fileHist)){
                             Helpers::moveFile($fileData, $fileKey, $fileHist);
-                            // return Redirect::to('home/success/'.$fileKey->key);
                             return Redirect::route('files.success', array('id' => $fileKey->key));
                         }
                     }
@@ -144,7 +143,7 @@ class FilesController extends \BaseController {
                     ->with('cur_folder', $this->folderDao->getFolderName($this->keyDao->getFolderKeyByKey($key)));;
             }
             else{
-                return Redirect::to('home')->withErrors('You aren\'t authorized to see this page.');
+                return Redirect::route('files.create')->withErrors('You aren\'t authorized to see this page.');
             }
         }
         else{
@@ -225,7 +224,6 @@ class FilesController extends \BaseController {
     {
         if($this->folderDao->exists(Input::get('folder')) and Auth::user()->ownsFolder(Input::get('folder'))){
             $this->keyDao->moveFile($key);
-            // return Redirect::to('home/edit/'.$key.'/edit')->with('message', 'File moved successfully.');
             return Redirect::route('files.edit', array('key' => $key))->with('message', 'File moved successfully.');
         }
         else{

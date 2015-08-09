@@ -33,7 +33,7 @@ class UsersAdminController extends \BaseController {
      * @param  int  $id
      * @return Response
      */
-    public function edit($id)
+    public function delete($id)
     {
         if($id!=1){
             if($this->userDao->userExists($id)){
@@ -43,11 +43,11 @@ class UsersAdminController extends \BaseController {
                     ->with('folders', $this->folderDao->getFolderByOwnership($id));
             }
             else{
-                return Response::view('notfound');
+                return Response::view('notfound')->setStatusCode(404);
             }
         }
         else{
-            return Response::view('unauthorized');
+            return Response::view('unauthorized')->setStatusCode(403);
         }
     }
 

@@ -40,6 +40,15 @@
             </div>
         </div>
     </div>
+    @if(Session::has('folderError'))
+    <div class="row">
+        <div class="col-md-6 col-xs-12">
+            <p class="alert alert-danger">
+                {{ Session::get('folderError') }}
+            </p>
+        </div>
+    </div>
+    @endif
     <div class="row">    
         <div class="col-md-12 col-xs-12">
             <div class="panel panel-default">

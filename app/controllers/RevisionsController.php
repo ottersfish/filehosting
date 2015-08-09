@@ -85,7 +85,7 @@ class RevisionsController extends \BaseController {
                 }
             }
             else{
-                return Redirect::to('home')->withErrors('You aren\'t authorized to do this action.');
+                return Redirect::route('home')->withErrors('You aren\'t authorized to do this action.');
             }
         }
         else{

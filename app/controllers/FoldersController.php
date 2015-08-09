@@ -54,7 +54,7 @@ class FoldersController extends \BaseController {
         }
         else{
             return Redirect::back()
-                ->withErrors('Folder doesn\'t exists!');
+                ->withErrors('Parent folder doesn\'t exists!');
         }
 	}
 
@@ -74,11 +74,17 @@ class FoldersController extends \BaseController {
             $folder_name = '/';
         }
         $folder_key = $this->folderDao->getKeyByName($folder_name, Auth::user()->id);
-        return View::make('folders.show')
-            ->with('folder_name', $folder_name)
-            ->with('parents', $this->folderDao->getFolderList(Auth::user()->id))
-            ->with('folders', $this->folderDao->getFolderByParent($folder_key))
-            ->with('files', $this->keyDao->getFilesByFolderandOwner($folder_key, Auth::user()->id));
+        if($folder_key === NULL){
+            return Redirect::route('folders.show')
+                    ->with('folderError','Folder'.$folder_name.' not found');
+        }
+        else{
+            return View::make('folders.show')
+                ->with('folder_name', $folder_name)
+                ->with('parents', $this->folderDao->getFolderList(Auth::user()->id))
+                ->with('folders', $this->folderDao->getFolderByParent($folder_key))
+                ->with('files', $this->keyDao->getFilesByFolderandOwner($folder_key, Auth::user()->id));
+        }
 	}
 
 
@@ -93,13 +99,12 @@ class FoldersController extends \BaseController {
         if($this->folderDao->exists($key)){
             if(Auth::user()->canEditFolder($key)){
                 $folder = $this->folderDao->getFolderByKey($key);
-                $folder = $this->folderDao->getFolderByKey($key);
                 return View::make('folders.edit')
                     ->with('folder', $folder)
                     ->with('method', 'put');
             }
             else{
-                return Redirect::to('home')->withErrors('You aren\'t authorized to see this page.');
+                return Redirect::route('home')->withErrors('You aren\'t authorized to see this page.');
             }
         }
         else{

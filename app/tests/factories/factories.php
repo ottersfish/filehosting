@@ -49,4 +49,12 @@
 		'owner' => 'factory:User'
 	]);
 
+	$factory('myFile', [
+		'key' => 'factory:Key',
+        'origFilename' => $faker->word,
+        'filename' => $faker->word,
+        'extension' => $faker->word,
+        'is_active' => true
+	]);
+
 ?>

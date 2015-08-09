@@ -10,6 +10,10 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
+Route::get('login', function(){
+	return Redirect::to(route('users.login'));
+});
+
 Route::get('/', array('as' => 'home', function(){
 	return Redirect::to('files/upload');}
 ));
@@ -44,9 +48,6 @@ Route::group(array('before' => 'auth'), function(){
 	Route::get('users/edit', array('as' => 'users.edit', 'uses' => 'UsersController@edit'));
 	Route::get('users/logout/', array('as' => 'users.logout', 'uses' => 'UsersController@logout'));
 	Route::put('users/edit', array('as' => 'users.update', 'uses' => 'UsersController@update'));
-
-	Route::get('admin/files/{id}', 'AdminController@files');
-	Route::get('admin/users/{id}/delete', 'AdminController@delete');
 });
 
 Route::group(array('prefix' => 'admin', 'before' => 'auth|isAdmin'), function(){
@@ -58,7 +59,7 @@ Route::group(array('prefix' => 'admin', 'before' => 'auth|isAdmin'), function(){
 	Route::resource('folders', 'FoldersAdminController',
 						array('only' => array('index')));
 
-	Route::get('users/{id}/delete', array('as' =>'admin.users.delete', 'uses' => 'UsersAdminController@edit'));
+	Route::get('users/{id}/delete', array('as' =>'admin.users.delete', 'uses' => 'UsersAdminController@delete'));
 	Route::resource('users', 'UsersAdminController',
 						array('only' => array('index', 'destroy')));
 
