@@ -41,10 +41,59 @@ class RevisionsControllerTest extends TestCase {
 
     }
 
-    // public function testUpdate()
-    // {
-    //     # post method
-    // }
+    public function testUpdateFails()
+    {
+        $mockKey = Mockery::mock('KeyDao');
+        $mockValidator = Mockery::mock('StdClass');
+
+        $mockKey->shouldReceive('getByKey')
+                ->once()
+                ->andReturn(Factory::create('Key'));
+        $mockKey->shouldReceive('validate')
+                ->once()
+                ->andReturn($mockValidator);
+        $mockValidator->shouldReceive('fails')
+                ->once()
+                ->andReturn(true);
+
+        $this->app->instance('KeyDao', $mockKey);
+
+        $response = $this->action('PUT', 'RevisionsController@update', [], [], [], ['HTTP_REFERER' => route('revisions.show')]);
+
+        $this->assertRedirectedToRoute('revisions.show');
+        $this->assertHasOldInput();
+        $this->assertSessionHasErrors();
+    }
+
+    public function testUpdateOk()
+    {
+        $mockKey = Mockery::mock('KeyDao');
+        $mockFile = Mockery::mock('myFileDao');
+        $mockValidator = Mockery::mock('StdClass');
+
+        $key = Factory::create('Key');
+        $mockKey->shouldReceive('getByKey')
+                ->twice()
+                ->andReturn($key);
+        $mockKey->shouldReceive('validate')
+                ->once()
+                ->andReturn($mockValidator);
+        $mockValidator->shouldReceive('fails')
+                ->once()
+                ->andReturn(false);
+        $mockFile->shouldReceive('reviseFile')
+                ->once()
+                ->andReturn(true);
+        $mockFile->shouldReceive('moveFile')
+                ->once();
+
+        $this->app->instance('myFileDao', $mockFile);
+        $this->app->instance('KeyDao', $mockKey);
+
+        $response = $this->action('PUT', 'RevisionsController@update', [], [], [], ['HTTP_REFERER' => route('revisions.show')]);
+
+        $this->assertRedirectedToRoute('revisions.show', array('key' => $key->key));
+    }
 
     public function testSetActiveNotFound()
     {

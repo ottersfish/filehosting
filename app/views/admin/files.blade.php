@@ -42,7 +42,6 @@
                                 <?php
                                     $targetdir = storage_path('files/'.$file->id_user.'/'.$file->folder_key.'/'.$file->key);
                                     $filename = $file->origFilename.'.'.$file->extension;
-                                    $filesize = Helpers::formatFileSize(filesize($targetdir.'/'.$filename));
                                 ?>
                                     <tr>
                                         <td>{{ $rownum++ }}</td>
@@ -51,7 +50,7 @@
                                         <td>{{ '.'.$file->extension }}</td>
                                         <td><a href="{{ route('files.show', array('key' => $file->key)) }}" >{{ route('files.show', array('key' => $file->key)) }}</a></td>
                                         <td>
-                                            {{ $filesize }}
+                                            {{ $file->filesize }}
                                         </td>
                                         @if(!$usernameFlag)
                                         <td>

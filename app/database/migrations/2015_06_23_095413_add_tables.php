@@ -38,6 +38,7 @@ class AddTables extends Migration {
             $table->string('origFilename');
             $table->string('filename');
             $table->string('extension');
+            $table->string('filesize');
             $table->boolean('is_active');
             $table->timestamps();
         });

@@ -50,7 +50,7 @@ class RevisionsController extends \BaseController {
             $fileHist = new myFile;
             $fileHist->key = $key;
             if($this->myFileDao->reviseFile($file, $fileHist)){
-                Helpers::moveFile($file, $fileKey, $fileHist);
+                $this->myFileDao->moveFile($file, $fileKey, $fileHist);
                 return Redirect::route('revisions.show', array('key' => $fileKey->key));
             }
             else{

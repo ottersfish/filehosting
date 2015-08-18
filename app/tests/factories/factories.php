@@ -35,7 +35,6 @@
 	]);
 
 	$factory('Key', [
-		// 'path' => $faker->regexify('^(.+)/([^/]+)$'),
 		'path' => $faker->word,
 		'key' => $faker->word,
 		'folder_key' => 'factory:Folder',
@@ -54,6 +53,7 @@
         'origFilename' => $faker->word,
         'filename' => $faker->word,
         'extension' => $faker->word,
+        'filesize' => $faker->word,
         'is_active' => true
 	]);
 

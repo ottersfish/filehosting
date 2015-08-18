@@ -4,6 +4,17 @@ use Carbon\Carbon;
 
 class myFileDao extends myFile{
 
+    private function formatFileSize($size){
+        $bytes = $size;
+        $precision = 2;
+        $units = array('B', 'KB', 'MB', 'GB', 'TB'); 
+        $bytes = max($bytes, 0); 
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024)); 
+        $pow = min($pow, count($units) - 1);
+        $bytes /= (1 << (10 * $pow)); 
+        return round($bytes, $precision) . ' ' . $units[$pow];
+    }
+
     private function getFileByKey($key){
         return $this->where('key', $key)
                     ->where('is_active', true)
@@ -109,13 +120,12 @@ class myFileDao extends myFile{
         $id = $details->id_user;
         $targetDir = storage_path('files/'.$id.'/'.$parent_folder.'/'.$details->key);
         $fileName = $file->origFilename.'.'.$file->extension;
-        $fileSize = Helpers::formatFileSize(filesize($targetDir.'/'.$fileName));
 
         $ret = new stdClass();
         $ret->path = $details->path;
         $ret->key = $file->key;
         $ret->fileName = $file->filename.'.'.$file->extension;
-        $ret->fileSize = $fileSize;
+        $ret->filesize = $file->filesize;
         $ret->id_user = $file->id_user;
         $ret->extension = $file->extension;
         return $ret;
@@ -142,6 +152,13 @@ class myFileDao extends myFile{
                 ->where('id', $id)
                 ->get()
                 ->count();
+    }
+
+    public function moveFile($file, $fileKey, $fileHist){
+        $main_dir = storage_path('files/');
+        $target_dir = $main_dir.$fileKey->id_user.'/'.$file['folder'].'/'.$fileKey->key;
+        if(!file_exists($target_dir))mkdir($target_dir);
+        $file['file']->move($target_dir, $fileHist->origFilename.'.'.$fileHist->extension);
     }
 
     public function renameFile($key){
@@ -181,6 +198,7 @@ class myFileDao extends myFile{
     public function saveFile($file,myFile $hist){
         $hist->extension = $file['file']->getClientOriginalExtension();
         $hist->filename = basename($file['file']->getClientOriginalName(), '.'.$hist->extension);
+        $hist->filesize = $this->formatFileSize($file['file']->getSize());
         $timestamp = Carbon::now()->format('Y_m_d_h_i_s_');
         $hist->origFilename = $timestamp.$hist->filename;
         $hist->is_active = 1;

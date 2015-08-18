@@ -8,33 +8,26 @@ class FilesControllerTest extends TestCase {
         Factory::$factoriesPath = 'app/tests/factories';
     }
 
-    // public function testIndex()
-    // {
-    //     $mock = Mockery::mock('KeyDao');
-    //     $mock->shouldReceive('getFiles')
-    //          ->once()
-    //          ->andReturn(Factory::times(3)->create('Key'));
-    //     Auth::shouldReceive('user')
-    //         ->twice()
-    //         ->andReturn(Factory::create('User'));
-    //     Auth::shouldReceive('check')
-    //         ->times(3)
-    //         ->andReturn(true);
-    //     // Helpers::shouldReceive('getFileSize')
-    //     //     ->times(3)
-    //     //     ->andReturn('19 KB');
-    //     $mockHelpers = Mockery::mock('Helpers');
-    //     $mockHelpers->shouldReceive('formatFileSize')
-    //                 ->times(3)
-    //                 ->andReturn('test');
+    public function testIndex()
+    {
+        $mock = Mockery::mock('KeyDao');
+        $mock->shouldReceive('getFiles')
+             ->once()
+             ->andReturn(Factory::times(3)->create('Key'));
+        Auth::shouldReceive('user')
+            ->times(5)
+            ->andReturn(Factory::create('User'));
+        Auth::shouldReceive('check')
+            ->times(3)
+            ->andReturn(true);
 
-    //     $this->app->instance('KeyDao', $mock);
+        $this->app->instance('KeyDao', $mock);
 
-    //     $response = $this->call('GET', 'files');
+        $response = $this->call('GET', 'files');
 
-    //     $this->assertTrue($response->isOk());
-    //     $this->assertTrue(!! $response->original->files);
-    // }
+        $this->assertTrue($response->isOk());
+        $this->assertTrue(!! $response->original->files);
+    }
 
     public function testCreateLoggedIn()
     {
@@ -71,11 +64,150 @@ class FilesControllerTest extends TestCase {
         $this->assertRedirectedTo('admin');
     }
 
-    // public function testStore()
-    // {
-    //     # need to create dummy file object
-    //     # how to call post method?
-    // }
+    public function testStoreFolderNotFound()
+    {
+        $mockFolder = Mockery::mock('FolderDao');
+
+        $mockFolder->shouldReceive('getFolderKeyByOwnerandName')
+                ->once()
+                ->andReturn();
+        $mockFolder->shouldReceive('exists')
+                ->once()
+                ->andReturn(false);
+        $faker = new Faker\Factory;
+        $input = array(
+                'folder' => $faker->create()->word
+        );
+
+        $this->app->instance('FolderDao', $mockFolder);
+
+        $response = $this->action('POST', 'FilesController@store', null, $input, [], ['HTTP_REFERER' => route('files.index')]);
+
+        $this->assertRedirectedToRoute('files.index');
+        $this->assertSessionHasErrors();
+    }
+
+    public function testStoreFolderForbidden()
+    {
+        $mockFolder = Mockery::mock('FolderDao');
+        $mockUser = Mockery::mock('UserDao');
+
+        $mockFolder->shouldReceive('exists')
+                ->once()
+                ->andReturn(true);
+        $mockUser->shouldReceive('ownsFolder')
+                ->once()
+                ->andReturn(false);
+        $faker = new Faker\Factory;
+        $input = array(
+                'folder' => $faker->create()->word
+        );
+
+        Auth::shouldReceive('check')
+            ->twice()
+            ->andReturn(true);
+        Auth::shouldReceive('user')
+            ->once()
+            ->andReturn($mockUser);
+
+        $this->app->instance('FolderDao', $mockFolder);
+
+        $response = $this->action('POST', 'FilesController@store', null, $input, [], ['HTTP_REFERER' => route('files.index')]);
+
+        $this->assertRedirectedToRoute('files.index');
+        $this->assertHasOldInput();
+        $this->assertSessionHasErrors();
+    }
+
+    public function testStoreValidationFails()
+    {
+        $mockFolder = Mockery::mock('FolderDao');
+        $mockKey = Mockery::mock('KeyDao');
+        $mockUser = Mockery::mock('UserDao');
+        $mockValidation = Mockery::mock('StdClass');
+
+        $mockFolder->shouldReceive('exists')
+                ->once()
+                ->andReturn(true);
+        $mockKey->shouldReceive('validate')
+                ->once()
+                ->andReturn($mockValidation);
+        $mockUser->shouldReceive('ownsFolder')
+                ->once()
+                ->andReturn(true);
+        $mockValidation->shouldReceive('fails')
+                ->once()
+                ->andReturn(true);
+        $faker = new Faker\Factory;
+        $input = array(
+                'folder' => $faker->create()->word
+        );
+
+        Auth::shouldReceive('check')
+            ->twice()
+            ->andReturn(true);
+        Auth::shouldReceive('user')
+            ->once()
+            ->andReturn($mockUser);
+
+        $this->app->instance('KeyDao', $mockKey);
+        $this->app->instance('FolderDao', $mockFolder);
+
+        $response = $this->action('POST', 'FilesController@store', null, $input, [], ['HTTP_REFERER' => route('files.index')]);
+
+        $this->assertRedirectedToRoute('files.index');
+        $this->assertHasOldInput();
+        $this->assertSessionHasErrors();
+    }
+
+    public function testStoreOk()
+    {
+        $mockFolder = Mockery::mock('FolderDao');
+        $mockKey = Mockery::mock('KeyDao');
+        $mockUser = Mockery::mock('UserDao');
+        $mockFile = Mockery::mock('myFileDao');
+        $mockValidation = Mockery::mock('StdClass');
+
+        $mockFolder->shouldReceive('exists')
+                ->once()
+                ->andReturn(true);
+        $mockKey->shouldReceive('validate')
+                ->once()
+                ->andReturn($mockValidation);
+        $mockKey->shouldReceive('saveKey')
+                ->once()
+                ->andReturn(true);
+        $mockFile->shouldReceive('saveFile')
+                ->once()
+                ->andReturn(true);
+        $mockFile->shouldReceive('moveFile')
+                ->once();
+        $mockUser->shouldReceive('ownsFolder')
+                ->once()
+                ->andReturn(true);
+        $mockValidation->shouldReceive('fails')
+                ->once()
+                ->andReturn(false);
+        $faker = new Faker\Factory;
+        $input = array(
+                'folder' => $faker->create()->word
+        );
+
+        Auth::shouldReceive('check')
+            ->twice()
+            ->andReturn(true);
+        Auth::shouldReceive('user')
+            ->once()
+            ->andReturn($mockUser);
+
+        $this->app->instance('myFileDao', $mockFile);
+        $this->app->instance('KeyDao', $mockKey);
+        $this->app->instance('FolderDao', $mockFolder);
+
+        $response = $this->action('POST', 'FilesController@store', null, $input, []);
+
+        $this->assertRedirectedTo('files/success');
+    }
 
     public function testShowFileNotFound()
     {
@@ -207,24 +339,21 @@ class FilesControllerTest extends TestCase {
         $this->assertViewHas('file');
     }
 
-    // public function testUpdate()
-    // {
-    //     Session::start();
+    public function testUpdate()
+    {
+        $mockFile = Mockery::mock('myFileDao');
+        $mockFile->shouldReceive('renameFile')
+                 ->once();
+        $user = Factory::create('User');
+        $this->be($user);
 
-    //     Route::enableFilters();
-    //     $mockFile = Mockery::mock('myFileDao');
-    //     $mockFile->shouldReceive('renameFile')
-    //              ->once();
-    //     $user = Factory::create('User');
-    //     $this->be($user);
+        $this->app->instance('myFileDao', $mockFile);
 
-    //     $this->app->instance('myFile', $mockFile);
+        $response = $this->action('PUT', 'FilesController@update');
 
-    //     $response = $this->call('PUT', 'files', ['_token' => csrf_token()]);
-
-    //     $this->assertRedirectedToRoute('files.edit');
-    //     $this->assertSessionHas('message', 'File was successfully edited.');
-    // }
+        $this->assertRedirectedToRoute('files.edit');
+        $this->assertSessionHas('message', 'File was successfully edited.');
+    }
 
     public function testSuccess()
     {
@@ -257,38 +386,109 @@ class FilesControllerTest extends TestCase {
         $this->app->instance('myFileDao', $mockFile);
 
         $response = $this->call('GET', route('files.download'));
-
-        //expected exception
     }
 
-    // public function testDownloadOk()
-    // {
-        // $mockKey = Mockery::mock('KeyDao');
-        // $mockFile = Mockery::mock('myFileDao');
-        // $key = Factory::create('Key');
-        // $mockKey->shouldReceive('getByKey')
-        //         ->once()
-        //         ->andReturn($key);
+    public function testDownloadOk()
+    {
+        $mockKey = Mockery::mock('KeyDao');
+        $mockFile = Mockery::mock('myFileDao');
+        $key = Factory::create('Key');
+        $mockKey->shouldReceive('getByKey')
+                ->once()
+                ->andReturn($key);
 
-        //need to create dummy file object
-        // $file = new StdClass;
-        // $file->path = 'blah';
-        // $file->fileName = 'blah';
-        // $mockFile->shouldReceive('getFilePath')
-        //         ->once()
-        //         ->andReturn($file);
+        $faker = new Faker\Factory;
+        $file = [
+            'test' => false,
+            'originalName' => $faker->create()->word,
+            'extension' => $faker->create()->fileExtension,
+            'mimeType' => $faker->create()->mimeType,
+            'size' => $faker->create()->randomNumber,
+            'path' => $faker->create()->file($sourceDir = storage_path(), $targetDir = storage_path('/files')),
+            'error' => 0
+        ];
 
-        // $this->app->instance('KeyDao', $mockKey);
-        // $this->app->instance('myFileDao', $mockFile);
+        $fileDum = new StdClass;
+        $fileDum->path = $file['path'];
+        $fileDum->fileName = $file['originalName'];
+        $mockFile->shouldReceive('getFilePath')
+                ->once()
+                ->andReturn($fileDum);
 
-        // $response = $this->call('GET', route('files.download'));
+        $this->app->instance('KeyDao', $mockKey);
+        $this->app->instance('myFileDao', $mockFile);
 
-        //expected exception
-    // }
+        $response = $this->call('GET', route('files.download'));
+        $this->assertTrue($response->isOk());
 
-    // public function testMoveFolder()
-    // {
-    //     put method handling(?)
-    // }
+        unlink($file['path']);
+    }
+
+    public function testMoveFolderNotExists()
+    {
+        $mockFolder = Mockery::mock('FolderDao');
+        
+        $mockFolder->shouldReceive('exists')
+                ->once()
+                ->andReturn(false);
+
+        $this->app->instance('FolderDao', $mockFolder);
+
+        $response = $this->action('PUT', 'FilesController@moveFolder', [], [], [], ['HTTP_REFERER' => route('files.edit')]);
+
+        $this->assertSessionHasErrors();
+    }
+
+    public function testMoveFolderForbidden()
+    {
+        $mockFolder = Mockery::mock('FolderDao');
+        $mockUser = Mockery::mock('UserDao');
+        
+        $mockFolder->shouldReceive('exists')
+                ->once()
+                ->andReturn(true);
+        $mockUser->shouldReceive('ownsFolder')
+                ->once()
+                ->andReturn(false);
+
+        Auth::shouldReceive('user')
+                ->once()
+                ->andReturn($mockUser);
+
+        $this->app->instance('FolderDao', $mockFolder);
+
+        $response = $this->action('PUT', 'FilesController@moveFolder', [], [], [], ['HTTP_REFERER' => route('files.edit')]);        
+
+        $this->assertRedirectedToRoute('files.edit');
+        $this->assertSessionHasErrors();
+    }
+
+    public function testMoveFolderOk()
+    {
+        $mockFolder = Mockery::mock('FolderDao');
+        $mockUser = Mockery::mock('UserDao');
+        $mockKey = Mockery::mock('KeyDao');
+        
+        $mockFolder->shouldReceive('exists')
+                ->once()
+                ->andReturn(true);
+        $mockUser->shouldReceive('ownsFolder')
+                ->once()
+                ->andReturn(true);
+        $mockKey->shouldReceive('moveFile')
+                ->once();
+
+        Auth::shouldReceive('user')
+                ->once()
+                ->andReturn($mockUser);
+
+        $this->app->instance('FolderDao', $mockFolder);
+        $this->app->instance('KeyDao', $mockKey);
+
+        $response = $this->action('PUT', 'FilesController@moveFolder', [], [], [], ['HTTP_REFERER' => route('files.edit')]);
+
+        $this->assertRedirectedToRoute('files.edit');
+        $this->assertSessionHas('message');
+    }
 
 }

@@ -49,7 +49,7 @@ class FoldersController extends \BaseController {
                 }
             }
             else{
-                return Response::view('unauthorized');
+                return Response::view('unauthorized')->setStatusCode(403);
             }
         }
         else{

@@ -116,7 +116,8 @@ class KeyDao extends Key{
                                     'extension', 
                                     'keys.id_user',
                                     'files.origFilename', 
-                                    'files.filename'))
+                                    'files.filename',
+                                    'files.filesize'))
                     ->get();
     }
 
@@ -133,6 +134,7 @@ class KeyDao extends Key{
                                     'keys.id_user',
                                     'files.origFilename', 
                                     'files.filename',
+                                    'files.filesize',
                                     'users.username'))
                     ->paginate($num);
         }
@@ -150,7 +152,13 @@ class KeyDao extends Key{
                     ->where('is_active', true)
                     ->where('id_user', $owner)
                     ->where('folder_key', $folder_key)
-                    ->select(array('keys.folder_key', 'keys.key', 'files.origFilename', 'extension', 'files.filename'))
+                    ->select(array(
+                        'keys.folder_key', 
+                        'keys.key', 
+                        'files.origFilename', 
+                        'files.extension', 
+                        'files.filename',
+                        'files.filesize'))
                     ->get();
     }
 

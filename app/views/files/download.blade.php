@@ -3,7 +3,7 @@
 @section('content')
 	<div class="row lead">
 		<div class="col-md-12 col-xs-12">
-			You want to download file <strong>{{ $file->fileName }}({{ $file->fileSize }})</strong>.
+			You want to download file <strong>{{ $file->fileName }}({{ $file->filesize }})</strong>.
 		</div>
 	</div>
 	<div class="row">

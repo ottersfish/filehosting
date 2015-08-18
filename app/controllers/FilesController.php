@@ -74,7 +74,7 @@ class FilesController extends \BaseController {
                         $fileHist = new myFile;
                         $fileHist->key = $fileKey->key;
                         if($this->myFileDao->saveFile($fileData, $fileHist)){
-                            Helpers::moveFile($fileData, $fileKey, $fileHist);
+                            $this->myFileDao->moveFile($fileData, $fileKey, $fileHist);
                             return Redirect::route('files.success', array('id' => $fileKey->key));
                         }
                     }

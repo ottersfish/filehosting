@@ -105,7 +105,6 @@
                                 <?php
                                     $targetdir = storage_path('files/'.Auth::user()->id.'/'.$file->folder_key.'/'.$file->key);
                                     $filename = $file->origFilename.'.'.$file->extension;
-                                    $filesize = Helpers::getFileSize($targetdir.'/'.$filename)
                                 ?>
                                     <tr>
                                     <td>{{ $rownum++ }}</td>
@@ -114,7 +113,7 @@
                                     <td>{{ '.'.$file->extension }}</td>
                                     <td><a href="{{ route('files.show', array('key' => $file->key)) }}" >{{ route('files.show', array('key' => $file->key)) }}</a></td>
                                     <td>
-                                        {{ $filesize }}
+                                        {{ $file->filesize }}
                                     </td>
                                     <td>
                                         {{ Form::open(array('method' => 'delete', 'url' => route('files.destroy', array('key' => $file->key)),

@@ -34,7 +34,7 @@ class UsersController extends \BaseController {
     {
         $regData = Input::all();
         $validation_result = $this->userDao->validateRegister($regData);
-        if($validation_result->passes()){
+        if(!$validation_result->fails()){
             $errors = $this->userDao->checkAvailbility($regData['username'], $regData['email']);
             if(empty($errors)){
                 if($this->userDao->saveUser($regData)){
@@ -82,7 +82,7 @@ class UsersController extends \BaseController {
 
     /**
      * Update user's name and password.
-     *\
+     *
      * @return Response
      */
     public function update()

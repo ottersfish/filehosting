@@ -34,12 +34,11 @@ Warning: PHP Startup: Unable to load dynamic library 'C:\xampp\php\ext\php_oci8.
 |        | GET|HEAD users/edit                                                          | users.edit           | UsersController@edit              | auth           |               |
 |        | GET|HEAD users/logout                                                        | users.logout         | UsersController@logout            | auth           |               |
 |        | PUT users/edit                                                               | users.update         | UsersController@update            | auth           |               |
-|        | GET|HEAD admin/files/{id}                                                    |                      | AdminController@files             | auth           |               |
-|        | GET|HEAD admin/users/{id}/delete                                             | admin.users.delete   | UsersAdminController@edit         | auth, isAdmin  |               |
 |        | GET|HEAD admin                                                               | admin.index          | AdminController@index             | auth, isAdmin  |               |
 |        | GET|HEAD admin/files                                                         | admin.files.index    | FilesAdminController@index        | auth, isAdmin  |               |
 |        | GET|HEAD admin/files/{files}                                                 | admin.files.show     | FilesAdminController@show         | auth, isAdmin  |               |
 |        | GET|HEAD admin/folders                                                       | admin.folders.index  | FoldersAdminController@index      | auth, isAdmin  |               |
+|        | GET|HEAD admin/users/{id}/delete                                             | admin.users.delete   | UsersAdminController@delete       | auth, isAdmin  |               |
 |        | GET|HEAD admin/users                                                         | admin.users.index    | UsersAdminController@index        | auth, isAdmin  |               |
 |        | DELETE admin/users/{users}                                                   | admin.users.destroy  | UsersAdminController@destroy      | auth, isAdmin  |               |
 |        | GET|HEAD admin/logs                                                          | admin.logs.index     | LogsAdminController@index         | auth, isAdmin  |               |
