@@ -2,6 +2,9 @@
 
 class RevisionsController extends \BaseController {
 
+    const FILE_UPLOAD_ERROR = 'Failed to upload the file, please try again!';
+    const FORBIDDEN_ERROR = 'You aren\'t authorized to see this page.';
+
     protected $myFileDao, $folderDao, $keyDao;
 
     public function __call($method, $args){
@@ -55,7 +58,7 @@ class RevisionsController extends \BaseController {
             }
             else{
                 return Redirect::route('revisions.show', array('key' => $fileKey->key))
-                    ->with('errors','Failed to upload the file, please try again!');
+                    ->with('errors', self::FILE_UPLOAD_ERROR);
             }
         }
         else{
@@ -85,7 +88,7 @@ class RevisionsController extends \BaseController {
                 }
             }
             else{
-                return Redirect::route('home')->withErrors('You aren\'t authorized to do this action.');
+                return Redirect::route('home')->withErrors(self::FORBIDDEN_ERROR);
             }
         }
         else{

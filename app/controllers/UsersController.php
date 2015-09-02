@@ -2,6 +2,10 @@
 
 class UsersController extends \BaseController {
 
+    const ERROR_OCCURED = 'Error occured, please try again.';
+    const INVALID_LOGIN_ERROR = 'Invalid Credentials';
+    const PROFILE_UPDATE_ERROR = 'Couldn\'t update profile, please try again.';
+
     protected $userDao, $folderDao;
 
     public function __call($method, $args){
@@ -45,12 +49,12 @@ class UsersController extends \BaseController {
                     }
                     else{
                         return Redirect::back()
-                            ->withErrors('Error occured, please try again.');
+                            ->withErrors(self::ERROR_OCCURED);
                     }
                 }
                 else{
                     return Redirect::back()
-                        ->withErrors('Error occured, please try again.');
+                        ->withErrors(self::ERROR_OCCURED);
                 }
             }
             else{
@@ -96,7 +100,7 @@ class UsersController extends \BaseController {
             }
             else{
                 return Redirect::back()
-                    ->with('errors', 'Couldn\'t update profile, please try again.');
+                    ->with('errors', self::PROFILE_UPDATE_ERROR);
             }
         }
         else{
@@ -135,7 +139,7 @@ class UsersController extends \BaseController {
             else{
                 return Redirect::back()
                     ->withInput()
-                    ->withErrors("Invalid Credentials");
+                    ->withErrors(self::INVALID_LOGIN_ERROR);
             }
         }
         else{

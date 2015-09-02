@@ -2,6 +2,12 @@
 
 class FilesController extends \BaseController {
 
+    const FOLDER_NOT_EXISTS_ERROR = 'Folder doesn\'t exists!';
+    const FOLDER_NOT_OWNED_ERROR = 'It\'s not your folder.';
+    const FILE_UPLOAD_ERROR = 'Failed to upload the file, please try again!';
+    const FILE_NOT_EXISTS_ERROR = 'File doesn\'t exists!';
+    const FORBIDDEN_ERROR = 'You aren\'t authorized to see this page.';
+
     protected $myFileDao, $folderDao, $keyDao;
 
     public function __call($method, $args){
@@ -81,7 +87,7 @@ class FilesController extends \BaseController {
                     }
                     else{
                         return Redirect::to('files.create')
-                            ->with('errors','Failed to upload the file, please try again!');
+                            ->with('errors', self::FILE_UPLOAD_ERROR);
                     }
                 }
                 else{
@@ -93,12 +99,12 @@ class FilesController extends \BaseController {
             else{
                 return Redirect::back()
                     ->withInput()
-                    ->withErrors('It\'s not your folder.');
+                    ->withErrors(self::FOLDER_NOT_OWNED_ERROR);
             }
         }
         else{
             return Redirect::back()
-                ->withErrors('Folder doesn\'t exists!');
+                ->withErrors(self::FOLDER_NOT_EXISTS_ERROR);
         }
     }
 
@@ -119,7 +125,7 @@ class FilesController extends \BaseController {
         }
         else{
             return Redirect::route('files.create')
-                    ->withErrors('File doesn\'t exists!');
+                    ->withErrors(self::FILE_NOT_EXISTS_ERROR);
         }
     }
 
@@ -144,7 +150,7 @@ class FilesController extends \BaseController {
                     ->with('cur_folder', $this->folderDao->getFolderName($this->keyDao->getFolderKeyByKey($key)));;
             }
             else{
-                return Redirect::route('files.create')->withErrors('You aren\'t authorized to see this page.');
+                return Redirect::route('files.create')->withErrors(self::FORBIDDEN_ERROR);
             }
         }
         else{
@@ -182,7 +188,7 @@ class FilesController extends \BaseController {
         }
         else{
             return Redirect::back()
-                    ->withErrors('File doesn\'t exists!');
+                    ->withErrors(self::FILE_NOT_EXISTS_ERROR);
         }
     }
 
@@ -228,7 +234,7 @@ class FilesController extends \BaseController {
             return Redirect::route('files.edit', array('key' => $key))->with('message', 'File moved successfully.');
         }
         else{
-            return Redirect::back()->withErrors('The folder you requested does not exists.');
+            return Redirect::back()->withErrors(self::FOLDER_NOT_EXISTS_ERROR);
         }
     }
 

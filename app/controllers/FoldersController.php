@@ -2,6 +2,10 @@
 
 class FoldersController extends \BaseController {
 
+    const FORBIDDEN_ERROR = 'You aren\'t authorized to see this page.';
+    const ERROR_OCCURED = 'An error occured please try again.';
+    const PARENT_FOLDER_NOT_EXISTS = 'Parent folder doesn\'t exists!';
+
 	protected $myFileDao, $folderDao, $keyDao;
 
     public function __call($method, $args){
@@ -39,7 +43,7 @@ class FoldersController extends \BaseController {
                     }
                     else{
                         return Redirect::back()
-                            ->withErrors('An error occured please try again.');
+                            ->withErrors(self::ERROR_OCCURED);
                     }
                 }
                 else{
@@ -54,7 +58,7 @@ class FoldersController extends \BaseController {
         }
         else{
             return Redirect::back()
-                ->withErrors('Parent folder doesn\'t exists!');
+                ->withErrors(self::PARENT_FOLDER_NOT_EXISTS);
         }
 	}
 
@@ -104,7 +108,7 @@ class FoldersController extends \BaseController {
                     ->with('method', 'put');
             }
             else{
-                return Redirect::route('home')->withErrors('You aren\'t authorized to see this page.');
+                return Redirect::route('home')->withErrors(self::FORBIDDEN_ERROR);
             }
         }
         else{
@@ -131,7 +135,7 @@ class FoldersController extends \BaseController {
             }
             else{
                 return Redirect::back()
-                ->withErrors('An error occured please try again.');
+                ->withErrors(self::ERROR_OCCURED);
             }
         }
         else{
