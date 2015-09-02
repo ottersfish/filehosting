@@ -50,19 +50,39 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	public function owns($key){
 		$file = Key::where('key', $key)->get()->first();
-		return $file->id_user == Auth::user()->id;
+		if($file->id_user == Auth::user()->id){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 
 	public function canEdit($key){
-		return $this->is_admin or $this->owns($key);
+		if($this->is_admin || $this->owns($key)){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 
 	public function ownsFolder($key){
 		$folder = Folder::where('key', $key)->get()->first();
-		return $folder->owner == Auth::user()->id;
+		if($folder->owner == Auth::user()->id){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 
 	public function canEditFolder($key){
-		return $this->is_admin or $this->ownsFolder($key);
+		if($this->is_admin || $this->ownsFolder($key)){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 }

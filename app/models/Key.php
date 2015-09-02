@@ -10,7 +10,7 @@ class Key extends Eloquent {
 	}
 
 	public function Files(){
-		return $this->hasMany('myFile');
+		return $this->hasMany('myFile', 'foreign_key');
 	}
 
 }

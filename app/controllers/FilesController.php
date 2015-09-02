@@ -21,7 +21,7 @@ class FilesController extends \BaseController {
      * @return Response
      */
     public function index()
-    {   
+    {
         return View::make('files.index')
                 ->with('files', $this->keyDao->getFiles(Auth::user()->id));
     }
@@ -38,9 +38,10 @@ class FilesController extends \BaseController {
             return Redirect::to('admin');
         }
         else{ 
-            if(Auth::check())
+            if(Auth::check()){
                 return View::make('files.create')
                     ->with('folders', $this->folderDao->getFolderList(Auth::user()->id));
+            }
             else{
                 return View::make('files.create');
             }

@@ -22,7 +22,8 @@ class FilesAdminController extends \BaseController {
      */
     public function index()
     {
-        $files = $this->keyDao->getFilesAdmin(true, 5);
+        $paginate = 5;
+        $files = $this->keyDao->getFilesAdmin(true, $paginate);
         return View::make('admin.files')
             ->with('files', $files)
             ->with('folders', $this->folderDao->getFolderListAdmin());

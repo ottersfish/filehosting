@@ -1,6 +1,8 @@
 <?php
 class FolderDao extends Folder{
 
+    const RANDOM_CHARS = "0123456789abcdefghijklmnopqrstuvwxyz";
+
     private function checkKey($key){
         return is_null($this->whereKey($key)->first());
     }
@@ -54,7 +56,7 @@ class FolderDao extends Folder{
     private function genKey(){
         $length=15;
         while(1){
-            $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+            $characters = self::RANDOM_CHARS;
             $charactersLength = strlen($characters);
             $randomString = '';
             for ($i = 0; $i < $length; $i++) {

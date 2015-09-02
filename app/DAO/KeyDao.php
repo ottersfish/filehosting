@@ -55,10 +55,10 @@ class KeyDao extends Key{
         }
     }
 
-    public function deleteGuestFiles(){
+    public function deleteGuestFiles($length, $interval){
         $id = 2;
         $query = $this->where('id_user', $id)
-                    ->whereRaw('created_at < date_sub(now(), interval 1 day)');
+                    ->whereRaw('created_at < date_sub(now(), interval '.$length.' '.$interval.' )');
         $rows = $query->get();
         if(!$rows->isEmpty()){
             $old_values = '';

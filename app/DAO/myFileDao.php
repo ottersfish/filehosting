@@ -88,12 +88,12 @@ class myFileDao extends myFile{
         return $query->delete();
     }
 
-    public function deleteGuestFiles(){
+    public function deleteGuestFiles($length, $interval){
         try {
             $id = 2;
             $query = $this->join('keys', 'keys.key', '=', 'files.key')
                         ->where('id_user', $id)
-                        ->whereRaw('created_at < date_sub(now(), interval 1 day)');
+                        ->whereRaw('created_at < date_sub(now(), interval '.$length.' '.$interval.' )');
             $rows = $query->get();
             if(!$rows->isEmpty()){
                 $old_values = '';

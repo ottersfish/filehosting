@@ -41,9 +41,10 @@ class deleteGuestFilesCommand extends Command {
      */
     public function fire()
     {
-        //
-        $this->myFileDao->deleteGuestFiles();
-        $this->keyDao->deleteGuestFiles();
+        $length = $this->argument('length');
+        $interval = $this->option('interval');
+        $this->myFileDao->deleteGuestFiles($length, $interval);
+        $this->keyDao->deleteGuestFiles($length, $interval);
     }
 
     /**
@@ -53,7 +54,7 @@ class deleteGuestFilesCommand extends Command {
      */
     protected function getArguments()
     {
-        return array();
+        return array(array('length', InputArgument::OPTIONAL, 'Interval length', 1));
     }
 
     /**
@@ -63,7 +64,7 @@ class deleteGuestFilesCommand extends Command {
      */
     protected function getOptions()
     {
-        return array();
+        return array(array('interval', 'i', InputOption::VALUE_REQUIRED, 'Interval mode (minute/day/month/year)', 'day'));
     }
 
 }
