@@ -21,6 +21,39 @@ class FilesController extends \BaseController {
         $this->keyDao = $keyDao;
     }
 
+    private function checkFolder($folder){
+        if($this->folderDao->exists($folder)){
+            if(!Auth::check() or Auth::user()->ownsFolder($folder)){
+                return 'ok';
+            }
+            else{
+                return self::FOLDER_NOT_OWNED_ERROR;
+            }
+        }
+        else{
+            return self::FOLDER_NOT_EXISTS_ERROR;
+        }
+    }
+
+    protected function save($fileData){
+        $fileKey = new Key;
+        $key = $this->keyDao->saveKey($fileData, $fileKey);
+        if($key !== NULL){
+            $fileHist = new myFile;
+            $fileHist->key = $fileKey->key;
+            if($this->myFileDao->saveFile($fileData, $fileHist)){
+                $this->myFileDao->moveFile($fileData, $fileKey, $fileHist);
+                return $key;
+            }
+            else{
+                return null;
+            }
+        }
+        else{
+            return null;
+        }
+    }
+
     /**
      * Display listing of user files.
      *
@@ -72,39 +105,29 @@ class FilesController extends \BaseController {
             'file'         => Input::file('userFile'),
             'folder'     => $folder
         );
-        if($this->folderDao->exists($fileData['folder'])){
-            if(!Auth::check() or Auth::user()->ownsFolder($fileData['folder'])){
-                $validation_result = $this->keyDao->validate($fileData);
-                if(!$validation_result->fails()){
-                    $fileKey = new Key;
-                    if($this->keyDao->saveKey($fileData, $fileKey)){
-                        $fileHist = new myFile;
-                        $fileHist->key = $fileKey->key;
-                        if($this->myFileDao->saveFile($fileData, $fileHist)){
-                            $this->myFileDao->moveFile($fileData, $fileKey, $fileHist);
-                            return Redirect::route('files.success', array('id' => $fileKey->key));
-                        }
-                    }
-                    else{
-                        return Redirect::to('files.create')
-                            ->with('errors', self::FILE_UPLOAD_ERROR);
-                    }
+        $checkFolderRes = $this->checkFolder($fileData['folder']);
+        if($checkFolderRes == 'ok'){
+            $validation_result = $this->keyDao->validate($fileData);
+            if(!$validation_result->fails()){
+                $key = $this->save($fileData);
+                if($key !== NULL){
+                    return Redirect::route('files.success', array('id' => $key));
                 }
                 else{
-                    return Redirect::back()
-                        ->withInput()
-                        ->withErrors($validation_result);
+                    return Redirect::to('files.create')
+                        ->with('errors', self::FILE_UPLOAD_ERROR);
                 }
             }
             else{
                 return Redirect::back()
                     ->withInput()
-                    ->withErrors(self::FOLDER_NOT_OWNED_ERROR);
+                    ->withErrors($validation_result);
             }
         }
         else{
             return Redirect::back()
-                ->withErrors(self::FOLDER_NOT_EXISTS_ERROR);
+                ->withInput()
+                ->withErrors($checkFolderRes);
         }
     }
 

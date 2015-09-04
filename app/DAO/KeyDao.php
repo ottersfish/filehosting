@@ -199,7 +199,9 @@ class KeyDao extends Key{
             $item->id_user=2;
         }
         LogDao::logCreate($this->table, 'folder_key, key, id_user', $file['folder'].', '.$item->key.', '.$item->id_user);
-        return $item->save();
+        if($item->save()){
+            return $item->key;
+        }
     }
 
     public function validate($file){

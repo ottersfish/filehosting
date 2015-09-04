@@ -176,7 +176,7 @@ class FilesControllerTest extends TestCase {
                 ->andReturn($mockValidation);
         $mockKey->shouldReceive('saveKey')
                 ->once()
-                ->andReturn(true);
+                ->andReturn('test');
         $mockFile->shouldReceive('saveFile')
                 ->once()
                 ->andReturn(true);
@@ -206,7 +206,7 @@ class FilesControllerTest extends TestCase {
 
         $response = $this->action('POST', 'FilesController@store', null, $input, []);
 
-        $this->assertRedirectedTo('files/success');
+        $this->assertRedirectedTo('files/success/test');
     }
 
     public function testShowFileNotFound()
